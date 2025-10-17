@@ -151,19 +151,19 @@ typedef struct s_physics
 	float				radius;
 	int					active;
 	void				*obj_ptr;
-}						t_phys;
+}						t_physics;
 
 typedef struct s_shfx
 {
 	int					enabled;
-	int phase;       /* 0=falling, 1=shattered */
-	int count;       /* shard aktif */
-	float g;         /* gravitasi */
-	float bounce;    /* koef. restitusi */
-	float fric;      /* friksi lantai */
-	t_obj *big_obj;  /* node objek besar */
-	t_plane *ground; /* lantai (optional) */
-	s_physics			shards[128];
+	int					phase;       /* 0=falling, 1=shattered */
+	int					count;       /* shard aktif */
+	float				g;         /* gravitasi */
+	float				bounce;    /* koef. restitusi */
+	float				fric;      /* friksi lantai */
+	t_obj				*big_obj;  /* node objek besar */
+	t_plane				*ground; /* lantai (optional) */
+	t_physics			shards[128];
 }						t_shfx;
 
 #endif
