@@ -19,7 +19,7 @@ typedef enum e_objtype
 	OBJ_CONE
 }						t_objtype;
 
-typedef struct s_v3
+typedef struct s_vec3
 {
 	float				x;
 	float				y;
