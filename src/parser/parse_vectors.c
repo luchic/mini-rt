@@ -25,7 +25,7 @@ int	parse_v3(const char *s, t_vec3 *v)
 	float	y;
 	float	z;
 
-	p = split_by(s, ',');
+	p = ft_split(s, ',');
 	if (!p || !p[0] || !p[1] || !p[2] || p[3])
 		return (free_split(p), 0);
 	if (!parse_axis_component(p[0], &x))

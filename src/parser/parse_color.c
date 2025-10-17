@@ -17,7 +17,7 @@ int	parse_color(const char *s, t_rgb *color)
 {
 	char	**rgb;
 
-	rgb = split_by(s, ',');
+	rgb = ft_split(s, ',');
 	if (!rgb || !rgb[0] || !rgb[1] || !rgb[2] || rgb[3])
 		return (free_split(rgb), 0);
 	if (!parse_color_component(rgb[0], &color->red)

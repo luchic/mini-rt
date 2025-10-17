@@ -54,7 +54,7 @@ int	parse_plane(char **tokens, t_scene *scene)
 	return (1);
 }
 
-int	parse_cylinder_metric(t_cylinder *cylinder, char **tokens)
+static int	parse_cylinder_metric(t_cylinder *cylinder, char **tokens)
 {
 	float	diameter;
 	float	height;

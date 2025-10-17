@@ -1,5 +1,6 @@
 #include "ft_minirt.h"
 #include <fcntl.h>
+#include <unistd.h>
 
 static char	**get_all_lines(int fd)
 {
@@ -34,11 +35,11 @@ static char	**get_file_lines(const char *path)
 	int		fd;
 	char	**lines;
 
-	if (!ends_with_rt(path))
-		die("scene must end with .rt");
+	if (!has_rt_extension(path))
+		ft_exit("scene must end with .rt", 1);
 	fd = open(path, O_RDONLY);
 	if (fd < 0)
-		die("cannot open scene file");
+		ft_exit("cannot open scene file", 1);
 	lines = get_all_lines(fd);
 	close(fd);
 	return (lines);
@@ -54,7 +55,7 @@ int	parse_file(const char *path, t_scene *sc)
 	while (lines[i])
 	{
 		if (!parse_file_line(lines[i], sc))
-			die("invalid line in scene");
+			ft_exit("invalid line in scene", 1);
 		ft_free(lines[i]);
 		i++;
 	}

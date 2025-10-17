@@ -1,12 +1,12 @@
 #include "ft_minirt.h"
 
-int	parse_float(const char *s, float *out, float minv, float maxv)
+int	parse_float(const char *str, float *out, float minv, float maxv)
 {
 	int		ok;
 	float	v;
 
 	ok = 0;
-	v = ft_atof_with_checker(s, &ok);
+	v = ft_atof_with_checker(str, &ok);
 	if (!ok)
 		return (0);
 	if (v < minv || v > maxv)
@@ -15,16 +15,16 @@ int	parse_float(const char *s, float *out, float minv, float maxv)
 	return (1);
 }
 
-void	scene_add_obj(t_scene *sc, t_obj *node)
+void	scene_add_obj(t_scene *scene, t_obj *node)
 {
 	t_obj	*it;
 
-	if (!sc->objs)
+	if (!scene->objs)
 	{
-		sc->objs = node;
+		scene->objs = node;
 		return ;
 	}
-	it = sc->objs;
+	it = scene->objs;
 	while (it->next)
 		it = it->next;
 	it->next = node;
