@@ -28,8 +28,8 @@ typedef struct s_vec3
 
 typedef struct s_ray
 {
-	t_vec3				o;
-	t_vec3				d;
+	t_vec3				origin;
+	t_vec3				direction;
 }						t_ray;
 
 typedef struct s_rgb
@@ -156,13 +156,13 @@ typedef struct s_physics
 typedef struct s_shfx
 {
 	int					enabled;
-	int phase;       /* 0=falling, 1=shattered */
-	int count;       /* shard aktif */
-	float g;         /* gravitasi */
-	float bounce;    /* koef. restitusi */
-	float fric;      /* friksi lantai */
-	t_obj *big_obj;  /* node objek besar */
-	t_plane *ground; /* lantai (optional) */
+	int					phase;       /* 0=falling, 1=shattered */
+	int					count;       /* shard aktif */
+	float				g;         /* gravitasi */
+	float				bounce;    /* koef. restitusi */
+	float				fric;      /* friksi lantai */
+	t_obj				*big_obj;  /* node objek besar */
+	t_plane				*ground; /* lantai (optional) */
 	t_physics			shards[128];
 }						t_shfx;
 

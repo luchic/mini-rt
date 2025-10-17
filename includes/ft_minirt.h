@@ -18,8 +18,8 @@ t_ray	ray(t_vec3 o, t_vec3 d);
 t_vec3	vclamp01(t_vec3 c);
 
 t_vec3	vdivv(t_vec3 a, float k);
-float	vdot(t_vec3 a, t_vec3 b);
-t_vec3	vcross(t_vec3 a, t_vec3 b);
+double dot_product(t_vec3 origin, t_vec3 direction);
+t_vec3	vcross_product(t_vec3 a, t_vec3 b);
 
 t_vec3	vadd(t_vec3 a, t_vec3 b);
 t_vec3	vsub(t_vec3 a, t_vec3 b);
