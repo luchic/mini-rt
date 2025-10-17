@@ -6,29 +6,29 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:19:46 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/17 12:19:51 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/17 14:38:17 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rt.h"
-#ifdef BONUS
-static t_v3	reject(t_v3 v, t_v3 axis){ return (vsub(v, vmul(axis, vdot(v, axis)))); }
+#include "ft_minirt.h"
 
-int	hit_cone(t_cone *co, t_ray ray_in, float tmax, float *t_hit_out, t_v3 *normal_out, t_mat *mat_out)
+static t_vec3	reject(t_vec3 v, t_vec3 axis){ return (vsub(v, vmul(axis, vdot(v, axis)))); }
+
+int	hit_cone(t_cone *co, t_ray ray_in, float tmax, float *t_hit_out, t_vec3 *normal_out, t_material *mat_out)
 {
 	float k = tanf(co->ang);
-	t_v3  axis = co->a;
-	t_v3  oc = vsub(ray_in.o, co->c);
+	t_vec3  axis = co->a;
+	t_vec3  oc = vsub(ray_in.o, co->c);
 	float dv = vdot(ray_in.d, axis);
 	float ov = vdot(oc, axis);
-	t_v3  rd_perp = reject(ray_in.d, axis);
-	t_v3  oc_perp = reject(oc, axis);
+	t_vec3  rd_perp = reject(ray_in.d, axis);
+	t_vec3  oc_perp = reject(oc, axis);
 	float A = vdot(rd_perp, rd_perp) - (k*k) * (dv*dv);
 	float B = 2.0f * (vdot(rd_perp, oc_perp) - (k*k) * dv * ov);
 	float C = vdot(oc_perp, oc_perp) - (k*k) * (ov*ov);
 	float discriminant = B*B - 4*A*C;
 	float t0, t1, sqrt_disc, t_hit, axis_pos;
-	t_v3 hit_point, axis_from_center;
+	t_vec3 hit_point, axis_from_center;
 
 	if (discriminant < 0)
 		return (0);
@@ -45,9 +45,9 @@ int	hit_cone(t_cone *co, t_ray ray_in, float tmax, float *t_hit_out, t_v3 *norma
 
 	*t_hit_out = t_hit;
 	{
-		t_v3 radial = reject(axis_from_center, axis);
+		t_vec3 radial = reject(axis_from_center, axis);
 		float s = sqrtf(1.0f + k*k);
-		t_v3 n_local = vnorm(vsub(radial, vmul(axis, vlen(radial) * k / s)));
+		t_vec3 n_local = vnorm(vsub(radial, vmul(axis, vlen(radial) * k / s)));
 		*normal_out = n_local;
 	}
 	mat_out->color = co->m.color;
@@ -57,7 +57,7 @@ int	hit_cone(t_cone *co, t_ray ray_in, float tmax, float *t_hit_out, t_v3 *norma
 	mat_out->bump = co->m.bump;
 	return (1);
 }
-#else
-int	hit_cone(t_cone *co, t_ray r, float tmax, float *t, t_v3 *n, t_mat *m)
+
+int	hit_cone(t_cone *co, t_ray r, float tmax, float *t, t_vec3 *n, t_material*m)
 { (void)co; (void)r; (void)tmax; (void)t; (void)n; (void)m; return (0); }
-#endif
+

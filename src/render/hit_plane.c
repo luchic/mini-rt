@@ -6,13 +6,13 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:20:52 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/17 12:20:54 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/17 14:39:55 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rt.h"
+#include "ft_minirt.h"
 
-int	hit_plane(t_plane *pl, t_ray ray_in, float tmax, float *t_hit_out, t_v3 *normal_out, t_mat *mat_out)
+int	hit_plane(t_plane *pl, t_ray ray_in, float tmax, float *t_hit_out, t_vec3 *normal_out, t_material *mat_out)
 {
 	float denom = vdot(pl->n, ray_in.d);
 	float t_candidate;

@@ -6,15 +6,15 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:22:12 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/17 12:22:15 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/17 14:40:12 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rt.h"
+#include "ft_minirt.h"
 
-int	hit_sphere(t_sphere *sp, t_ray ray_in, float tmax, float *t_hit_out, t_v3 *normal_out, t_mat *mat_out)
+int	hit_sphere(t_sphere *sp, t_ray ray_in, float tmax, float *t_hit_out, t_vec3 *normal_out, t_material *mat_out)
 {
-	t_v3 offset_center = vsub(ray_in.o, sp->c);
+	t_vec3 offset_center = vsub(ray_in.o, sp->c);
 	float a_coef = vdot(ray_in.d, ray_in.d);
 	float b_coef = 2.0f * vdot(offset_center, ray_in.d);
 	float c_coef = vdot(offset_center, offset_center) - sp->r * sp->r;
