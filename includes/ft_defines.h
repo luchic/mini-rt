@@ -28,15 +28,15 @@ typedef struct s_v3
 
 typedef struct s_ray
 {
-	t_vec3				o;
-	t_vec3				d;
+	t_vec3				origin;
+	t_vec3				direction;
 }						t_ray;
 
 typedef struct s_rgb
 {
 	float				red;
-	float				g;
-	float				b;
+	float				green;
+	float				blue;
 }						t_rgb;
 
 typedef struct s_img
