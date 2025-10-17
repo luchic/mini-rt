@@ -1,20 +1,27 @@
-#include "rt.h"
+#include "ft_minirt.h"
 
 static unsigned char u8_clamp(float x)
 {
-	if (x < 0.0f) x = 0.0f;
-	if (x > 1.0f) x = 1.0f;
-	return (unsigned char)(x * 255.0f + 0.5f);
+	if (x < 0.0f)
+		x = 0.0f;
+	if (x > 1.0f)
+		x = 1.0f;
+	return ((unsigned char)(x * 255.0f + 0.5f));
 }
 
-static uint32_t pack_rgba(t_rgb color)
+static uint32_t	pack_rgba(t_rgb color)
 {
-	unsigned char r = u8_clamp(color.r);
-	unsigned char g = u8_clamp(color.g);
-	unsigned char b = u8_clamp(color.b);
-	unsigned char a = 255;
-	return ((uint32_t)r << 24) | ((uint32_t)g << 16)
-	     | ((uint32_t)b << 8)  | (uint32_t)a;
+	unsigned	char r;
+	unsigned	char g;
+	unsigned	char b;
+	unsigned	char a;
+
+	r = u8_clamp(color.r);
+	g = u8_clamp(color.g);
+	b = u8_clamp(color.b);
+	a = 255;
+	return (((uint32_t)r << 24) | ((uint32_t)g << 16)
+	     | ((uint32_t)b << 8)  | (uint32_t)a);
 }
 
 void    image_create(t_app *app, int w, int h)
@@ -28,7 +35,7 @@ void    image_create(t_app *app, int w, int h)
 		die("mlx_image_to_window failed");
 }
 
-void    image_destroy(t_app *app)
+void	image_destroy(t_app *app)
 {
 	if (app->img.img)
 	{
@@ -37,13 +44,15 @@ void    image_destroy(t_app *app)
 	}
 }
 
-void    image_put_px(t_img *img, int x, int y, t_rgb color)
+void	image_put_px(t_img *img, int x, int y, t_rgb color)
 {
 	uint32_t    *pixels;
 	size_t       pixel_index;
 
-	if (x < 0 || y < 0) return ;
-	if (x >= img->w || y >= img->h) return ;
+	if (x < 0 || y < 0) 
+		return ;
+	if (x >= img->w || y >= img->h)
+		return ;
 	pixels = (uint32_t *)img->img->pixels;
 	pixel_index = (size_t)y * (size_t)img->img->width + (size_t)x;
 	pixels[pixel_index] = pack_rgba(color);
