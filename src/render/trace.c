@@ -6,7 +6,7 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:17:24 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/17 12:18:51 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/17 17:22:47 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,16 @@ static int	hit_all(t_scene *sc, t_ray ray_in, float *tmin_out, t_vec3 *normal_ou
 
 int	trace_ray(t_scene *sc, t_ray ray_in, t_rgb *color_out)
 {
-	float t_hit; 
-	t_vec3  surface_normal; 
-	t_material hit_material;
-	t_vec3  hit_point;
+	float		t_hit; 
+	t_vec3		surface_normal; 
+	t_material	hit_material;
+	t_vec3 		hit_point;
 
-	if (!hit_all(sc, ray_in, &t_hit, &surface_normal, &hit_material)) return (0);
+	if (!hit_all(sc, ray_in, &t_hit, &surface_normal, &hit_material))
+		return (0);
 	hit_point = vadd(ray_in.o, vmul(ray_in.d, t_hit));
-	*color_out = shade(sc, hit_point, surface_normal, &hit_material, vmul(ray_in.d, -1.0f));
+	*color_out = shade(sc, hit_point, surface_normal,
+			&hit_material, vmul(ray_in.d, -1.0f));
 	return (1);
 }
 
@@ -62,7 +64,7 @@ void	render(t_app *app)
 		{
 			float ndc_x = (2.0f * ((x + 0.5f) / (float)app->win_w) - 1.0f) * aspect * image_plane_scale;
 			float ndc_y = (1.0f - 2.0f * ((y + 0.5f) / (float)app->win_h)) * image_plane_scale;
-			t_v3 dir = vnorm(vadd(vadd(vmul(app->sc.cam.right, ndc_x),
+			t_vec3 dir = vnorm(vadd(vadd(vmul(app->sc.cam.right, ndc_x),
 			                           vmul(app->sc.cam.up, ndc_y)),
 			                      app->sc.cam.dir));
 			t_ray primary = ray(app->sc.cam.pos, dir);
