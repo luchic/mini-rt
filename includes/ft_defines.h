@@ -63,42 +63,45 @@ typedef struct s_light
 	struct s_light		*next;
 }						t_light;
 
-typedef struct s_mat
+typedef struct s_material
 {
 	t_rgb				color;
 	int					checker;
 	float				specular;
 	float				sp_exp;
 	int					bump;
-}						t_mat;
+}						t_material;
 
 typedef struct s_sphere
 {
-	t_vec3				c;
-	float				r;
-	t_mat				m;
+	t_vec3				center;
+	float				radius;
+	t_material			material;
 }						t_sphere;
+
 typedef struct s_plane
 {
-	t_vec3				p;
-	t_vec3				n;
-	t_mat				m;
+	t_vec3				position;
+	t_vec3				normal;
+	t_material			material;
 }						t_plane;
-typedef struct s_cyl
+
+typedef struct s_cylinder
 {
-	t_vec3				c;
-	t_vec3				a;
-	float				r;
-	float				h;
-	t_mat				m;
-}						t_cyl;
+	t_vec3				center;
+	t_vec3				axis;
+	float				radius;
+	float				height;
+	t_material			material;
+}						t_cylinder;
+
 typedef struct s_cone
 {
-	t_vec3				c;
-	t_vec3				a;
-	float				ang;
-	float				h;
-	t_mat				m;
+	t_vec3				center;
+	t_vec3				axis;
+	float				angle;
+	float				height;
+	t_material			material;
 }						t_cone;
 
 typedef struct s_obj
@@ -141,14 +144,14 @@ typedef struct s_app
 	t_tetris			*tetris;
 }						t_app;
 
-typedef struct s_phys
+/* typedef struct s_physics
 {
 	t_vec3				pos;
 	t_vec3				vel;
 	float				r;
 	int					active;
 	void				*obj_ptr;
-}						t_phys;
+}						t_phys; */
 
 typedef struct s_shfx
 {
