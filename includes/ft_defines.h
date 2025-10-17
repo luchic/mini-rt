@@ -34,7 +34,7 @@ typedef struct s_ray
 
 typedef struct s_rgb
 {
-	float				r;
+	float				red;
 	float				g;
 	float				b;
 }						t_rgb;
@@ -144,14 +144,14 @@ typedef struct s_app
 	t_tetris			*tetris;
 }						t_app;
 
-/* typedef struct s_physics
+typedef struct s_physics
 {
 	t_vec3				pos;
 	t_vec3				vel;
-	float				r;
+	float				radius;
 	int					active;
 	void				*obj_ptr;
-}						t_phys; */
+}						t_phys;
 
 typedef struct s_shfx
 {
@@ -163,7 +163,7 @@ typedef struct s_shfx
 	float fric;      /* friksi lantai */
 	t_obj *big_obj;  /* node objek besar */
 	t_plane *ground; /* lantai (optional) */
-	t_phys				shards[128];
+	s_physics			shards[128];
 }						t_shfx;
 
 #endif
