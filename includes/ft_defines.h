@@ -19,7 +19,7 @@ typedef enum e_objtype
 	OBJ_CONE
 }						t_objtype;
 
-typedef struct s_v3
+typedef struct s_vec3
 {
 	float				x;
 	float				y;
@@ -151,7 +151,7 @@ typedef struct s_physics
 	float				radius;
 	int					active;
 	void				*obj_ptr;
-}						t_phys;
+}						t_physics;
 
 typedef struct s_shfx
 {
@@ -163,7 +163,7 @@ typedef struct s_shfx
 	float fric;      /* friksi lantai */
 	t_obj *big_obj;  /* node objek besar */
 	t_plane *ground; /* lantai (optional) */
-	s_physics			shards[128];
+	t_physics			shards[128];
 }						t_shfx;
 
 #endif
