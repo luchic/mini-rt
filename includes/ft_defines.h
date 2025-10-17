@@ -35,8 +35,8 @@ typedef struct s_ray
 typedef struct s_rgb
 {
 	float				red;
-	float				g;
-	float				b;
+	float				green;
+	float				blue;
 }						t_rgb;
 
 typedef struct s_img
