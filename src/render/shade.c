@@ -6,73 +6,168 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:22:37 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/17 12:22:38 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/18 11:50:12 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "rt.h"
+#include "ft_minirt.h"
 
-static t_rgb	add_rgb(t_rgb a, t_rgb b)
+/* ---- bonus hooks (disediakan di modul bonus jika ada) ------------------- */
+t_rgb		checker_bonus(t_vec3 p, t_rgb base);
+t_vec3		bump_bonus(t_vec3 n, t_vec3 p, t_material *m);
+t_rgb		specular_bonus(t_vec3 n, t_vec3 l, t_vec3 v, t_material *m);
+int			in_shadow(t_scene *sc, t_vec3 p, t_vec3 to_l, float max_d);
+
+/* ---- util warna --------------------------------------------------------- */
+static t_rgb	rgb_add(t_rgb a, t_rgb b)
 {
-	t_rgb out;
-	out.r = a.r + b.r;
-	out.g = a.g + b.g;
-	out.b = a.b + b.b;
-	return (out);
-}
-static t_rgb	mul_rgb(t_rgb a, float k)
-{
-	t_rgb out;
-	out.r = a.r * k;
-	out.g = a.g * k;
-	out.b = a.b * k;
-	return (out);
-}
-static t_rgb	modulate(t_rgb a, t_rgb b)
-{
-	t_rgb out;
-	out.r = a.r * b.r;
-	out.g = a.g * b.g;
-	out.b = a.b * b.b;
+	t_rgb	out;
+
+	out.red = a.red + b.red;
+	out.green = a.green + b.green;
+	out.blue = a.blue + b.blue;
 	return (out);
 }
 
-t_rgb	shade(t_scene *sc, t_v3 hit_pos, t_v3 surface_normal, t_mat *mat_in, t_v3 view_dir)
+static t_rgb	rgb_mul(t_rgb a, float k)
 {
-	(void)view_dir;
-	t_light *light = sc->lights;
-	t_rgb shaded = mul_rgb(sc->amb_color, sc->amb);
-	t_rgb base_color = mat_in->color;
+	t_rgb	out;
 
-#ifdef BONUS
-	if (mat_in->checker) base_color = checker_bonus(hit_pos, base_color);
-	if (mat_in->bump) surface_normal = bump_bonus(surface_normal, hit_pos, mat_in);
-#endif
+	out.red = a.red * k;
+	out.green = a.green * k;
+	out.blue = a.blue * k;
+	return (out);
+}
 
-	while (light)
+static t_rgb	rgb_mod(t_rgb a, t_rgb b)
+{
+	t_rgb	out;
+
+	out.red = a.red * b.red;
+	out.green = a.green * b.green;
+	out.blue = a.blue * b.blue;
+	return (out);
+}
+
+static t_rgb	rgb_clamp01(t_rgb c)
+{
+	t_rgb	out;
+
+	out = c;
+	if (out.red > 1.0f)
+		out.red = 1.0f;
+	if (out.green > 1.0f)
+		out.green = 1.0f;
+	if (out.blue > 1.0f)
+		out.blue = 1.0f;
+	if (out.red < 0.0f)
+		out.red = 0.0f;
+	if (out.green < 0.0f)
+		out.green = 0.0f;
+	if (out.blue < 0.0f)
+		out.blue = 0.0f;
+	return (out);
+}
+
+/* ---- efek permukaan (checker/bump) ------------------------------------- */
+static void	apply_surface_effects(t_material *m, t_vec3 p, t_vec3 *n, t_rgb *base)
+{
+	if (m->checker)
+		*base = checker_bonus(p, *base);
+	if (m->bump)
+		*n = bump_bonus(*n, p, m);
+}
+
+/* ---- helper: hitung dir & jarak ke lampu (≤4 arg) ---------------------- */
+static float	make_dir_and_dist(t_vec3 *out_dir, t_vec3 from, t_vec3 to)
+{
+	t_vec3	v;
+	float	d;
+
+	v = vsub(to, from);
+	d = vlen(v);
+	*out_dir = v;
+	if (d > EPS)
+		*out_dir = vdivv(v, d);
+	return (d);
+}
+
+/* ---- helper: diffuse term ---------------------------------------------- */
+static t_rgb	diffuse_rgb(t_rgb lc, t_material *m, double nd)
+{
+	t_rgb	diff;
+
+	diff = rgb_mod(m->color, lc);
+	return (rgb_mul(diff, (float)nd));
+}
+
+/* ---- helper: specular term --------------------------------------------- */
+static t_rgb	specular_rgb(t_vec3 n, t_vec3 ldir, t_ray hv, t_rgb lc)
+{
+	t_rgb	sp;
+
+	sp = specular_bonus(n, ldir, vnorm(hv.direction), &hv.material);
+	return (rgb_mod(lc, sp));
+}
+
+/* ---- kontribusi satu lampu (≤5 variabel, ≤25 baris) -------------------- */
+static t_rgb	accum_light_once(t_scene *sc, t_light *L, t_ray hv, t_vec3 n)
+{
+	t_vec3	dir;
+	float	dist;
+	double	nd;
+	t_rgb	lc;
+	t_rgb	sum;
+
+	sum.red = 0.0f;
+	sum.green = 0.0f;
+	sum.blue = 0.0f;
+	dist = make_dir_and_dist(&dir, hv.origin, L->pos);
+	if (!in_shadow(sc, hv.origin, dir, dist))
 	{
-		t_v3 to_light = vsub(light->pos, hit_pos);
-		float light_dist = vlen(to_light);
-		to_light = vdivv(to_light, light_dist);
-		if (!in_shadow(sc, hit_pos, to_light, light_dist))
+		nd = dot_product(n, dir);
+		if (nd > 0.0)
 		{
-			float ndotl = vdot(surface_normal, to_light);
-			if (ndotl > 0.0f)
-			{
-				t_rgb diffuse = mul_rgb(modulate(base_color, light->color), ndotl * light->br);
-				shaded = add_rgb(shaded, diffuse);
-#ifdef BONUS
-				{
-					t_rgb spec = specular_bonus(surface_normal, to_light, view_dir, mat_in);
-					shaded = add_rgb(shaded, mul_rgb(modulate(light->color, spec), light->br));
-				}
-#endif
-			}
+			lc = rgb_mul(L->color, L->br);
+			sum = rgb_add(sum, diffuse_rgb(lc, &hv.material, nd));
+			sum = rgb_add(sum, specular_rgb(n, dir, hv, lc));
 		}
-		light = light->next;
 	}
-	if (shaded.r > 1) shaded.r = 1;
-	if (shaded.g > 1) shaded.g = 1;
-	if (shaded.b > 1) shaded.b = 1;
-	return (shaded);
+	return (sum);
+}
+
+/* ---- loop semua lampu --------------------------------------------------- */
+static t_rgb	accum_lights(t_scene *sc, t_ray hv, t_vec3 n)
+{
+	t_light	*it;
+	t_rgb	sum;
+
+	sum.red = 0.0f;
+	sum.green = 0.0f;
+	sum.blue = 0.0f;
+	it = sc->lights;
+	while (it)
+	{
+		sum = rgb_add(sum, accum_light_once(sc, it, hv, n));
+		it = it->next;
+	}
+	return (sum);
+}
+
+/* ---- entry point sesuai ft_minirt.h ------------------------------------ */
+t_rgb	shade(t_scene *sc, t_ray hit_view, t_vec3 normal, t_material *mat)
+{
+	t_rgb	amb;
+	t_rgb	out;
+	t_ray	hv;
+	t_vec3	n;
+
+	hv = hit_view;
+	hv.material = *mat;
+	n = normal;
+
+	apply_surface_effects(&hv.material, hv.origin, &n, &hv.material.color);
+	amb = rgb_mul(sc->amb_color, sc->amb);
+	out = rgb_add(amb, accum_lights(sc, hv, n));
+	return (rgb_clamp01(out));
 }
