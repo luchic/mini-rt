@@ -30,6 +30,9 @@ typedef struct s_ray
 {
 	t_vec3				origin;
 	t_vec3				direction;
+	float				t;
+	t_vec3				normal;
+	t_material			material;
 }						t_ray;
 
 typedef struct s_rgb
@@ -142,6 +145,7 @@ typedef struct s_app
 	double				last_ts;
 	int					tetris_enabled;
 	t_tetris			*tetris;
+	unsigned int		rng_seed;
 }						t_app;
 
 typedef struct s_physics
