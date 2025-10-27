@@ -16,9 +16,9 @@ static uint32_t	pack_rgba(t_rgb color)
 	unsigned	char b;
 	unsigned	char a;
 
-	r = u8_clamp(color.r);
-	g = u8_clamp(color.g);
-	b = u8_clamp(color.b);
+	r = u8_clamp(color.red);
+	g = u8_clamp(color.green);
+	b = u8_clamp(color.blue);
 	a = 255;
 	return (((uint32_t)r << 24) | ((uint32_t)g << 16)
 	     | ((uint32_t)b << 8)  | (uint32_t)a);
@@ -28,11 +28,11 @@ void    image_create(t_app *app, int w, int h)
 {
 	app->img.img = mlx_new_image(app->mlx, w, h);
 	if (!app->img.img)
-		die("mlx_new_image failed");
-	app->img.w = w;
-	app->img.h = h;
+		ft_exit("mlx_new_image failed", 1);
+	app->img.width = w;
+	app->img.height = h;
 	if (mlx_image_to_window(app->mlx, app->img.img, 0, 0) < 0)
-		die("mlx_image_to_window failed");
+		ft_exit("mlx_image_to_window failed", 1);
 }
 
 void	image_destroy(t_app *app)
@@ -51,7 +51,7 @@ void	image_put_px(t_img *img, int x, int y, t_rgb color)
 
 	if (x < 0 || y < 0) 
 		return ;
-	if (x >= img->w || y >= img->h)
+	if (x >= img->width || y >= img->height)
 		return ;
 	pixels = (uint32_t *)img->img->pixels;
 	pixel_index = (size_t)y * (size_t)img->img->width + (size_t)x;

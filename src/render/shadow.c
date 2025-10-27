@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shadow.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 11:00:46 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/18 11:05:24 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/27 14:29:13 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	hit_any(t_scene *sc, t_ray ray_in, float tmax)
 		if (node->type == OBJ_PLANE && hit_plane((t_plane *)node->ptr,
 				ray_in, tmax, &t_candidate, &n_tmp, &m_tmp))
 			return (1);
-		if (node->type == OBJ_CYL && hit_cylinder((t_cylinder *)node->ptr,
+		if (node->type == OBJ_CYLINDER && hit_cylinder((t_cylinder *)node->ptr,
 				ray_in, tmax, &t_candidate, &n_tmp, &m_tmp))
 			return (1);
 		if (node->type == OBJ_CONE && hit_cone((t_cone *)node->ptr,

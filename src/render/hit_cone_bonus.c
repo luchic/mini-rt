@@ -3,25 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cone_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:19:46 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/18 11:56:23 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/27 14:33:37 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minirt.h"
 
-/* float-dot sebagai pembungkus dot_product(double) */
-static float	vdot(t_vec3 a, t_vec3 b)
-{
-	return ((float)dot_product(a, b));
-}
-
 /* proyeksi ke sumbu (axis asumsi ter-norm), serta komponennya yang tegak lurus */
 static t_vec3	vproj(t_vec3 v, t_vec3 axis)
 {
-	return (vmul(axis, vdot(v, axis)));
+	return (vmul(axis, dot_product(v, axis)));
 }
 
 static t_vec3	vrej(t_vec3 v, t_vec3 axis)
@@ -39,9 +33,9 @@ static int	cone_solve(t_vec3 rdp, t_vec3 ocp, float dv, float ov, float k,
 	float	d;
 	float	sq;
 
-	a = vdot(rdp, rdp) - (k * k) * (dv * dv);
-	b = 2.0f * (vdot(rdp, ocp) - (k * k) * dv * ov);
-	c = vdot(ocp, ocp) - (k * k) * (ov * ov);
+	a = dot_product(rdp, rdp) - (k * k) * (dv * dv);
+	b = 2.0f * (dot_product(rdp, ocp) - (k * k) * dv * ov);
+	c = dot_product(ocp, ocp) - (k * k) * (ov * ov);
 	d = b * b - 4.0f * a * c;
 	if (d < 0.0f || a == 0.0f)
 		return (0);
@@ -56,7 +50,7 @@ static int	cone_clip_height(t_cone *co, t_vec3 axis, t_vec3 p)
 {
 	float	pos;
 
-	pos = vdot(vsub(p, co->center), axis);
+	pos = dot_product(vsub(p, co->center), axis);
 	if (pos < -co->height * 0.5f)
 		return (0);
 	if (pos > co->height * 0.5f)
@@ -74,7 +68,7 @@ static t_vec3	cone_normal(t_cone *co, t_vec3 axis, t_vec3 p, float k)
 
 	from_c = vsub(p, co->center);
 	radial = vrej(from_c, axis);
-	lenr = vdot(radial, vnorm(radial));
+	lenr = dot_product(radial, vnorm(radial));
 	s = sqrtf(1.0f + k * k);
 	/* arah normal: radial - axis * (|radial| * k / s) */
 	return (vnorm(vsub(radial, vmul(axis, (lenr * k) / s))));
@@ -98,8 +92,8 @@ int	hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec)
 	axis = vnorm(co->axis);
 	k = tanf(co->angle);
 	oc = vsub(ray.origin, co->center);
-	dv = vdot(ray.direction, axis);
-	ov = vdot(oc, axis);
+	dv = dot_product(ray.direction, axis);
+	ov = dot_product(oc, axis);
 	rdp = vrej(ray.direction, axis);
 	ocp = vrej(oc, axis);
 	if (!cone_solve(rdp, ocp, dv, ov, k, &t0, &t1))
