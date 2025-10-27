@@ -16,9 +16,9 @@ static t_vec3 rot_y(t_vec3 v, float ang)
 
 void	anim_init(t_app *a)
 {
-	a->anim.enabled = 1;
-	a->anim.speed = 0.6f;
-	a->anim.radius = 4.0f;
+	a->animation.enabled = 1;
+	a->animation.speed = 0.6f;
+	a->animation.radius = 4.0f;
 	a->last_ts = mlx_get_time();
 }
 
@@ -28,13 +28,13 @@ static void orbit_camera(t_app *a, double t)
 	t_vec3	look;
 	t_vec3	pos;
 
-	ang = (float)(t * a->anim.speed);
-	look = v3(0.0f, 0.0f, 0.0f);
-	pos = v3(a->anim.radius, 1.5f, 0.0f);
+	ang = (float)(t * a->animation.speed);
+	look = vec3(0.0f, 0.0f, 0.0f);
+	pos = vec3(a->animation.radius, 1.5f, 0.0f);
 	pos = rot_y(pos, ang);
-	a->sc.cam.pos = pos;
-	a->sc.cam.dir = vnorm(vsub(look, pos));
-	camera_build(&a->sc.cam);
+	a->scene.camera.pos = pos;
+	a->scene.camera.direction = vnorm(vsub(look, pos));
+	camera_build(&a->scene.camera);
 }
 
 static void spin_objects(t_scene *sc, double t)
@@ -47,9 +47,9 @@ static void spin_objects(t_scene *sc, double t)
 	while (o)
 	{
 		if (o->type == OBJ_PLANE)
-			((t_plane*)o->ptr)->n = rot_y(((t_plane*)o->ptr)->n, ang);
-		if (o->type == OBJ_CYL)
-			((t_cylinder*)o->ptr)->axis = rot_y(((t_cyl*)o->ptr)->axis, ang);
+			((t_plane*)o->ptr)->normal = rot_y(((t_plane*)o->ptr)->normal, ang);
+		if (o->type == OBJ_CYLINDER)
+			((t_cylinder*)o->ptr)->axis = rot_y(((t_cylinder*)o->ptr)->axis, ang);
 		o = o->next;
 	}
 }
@@ -59,7 +59,7 @@ void	anim_update(t_app *a, double now)
 	double dt;
 	double t;
 
-	if (!a->anim.enabled)
+	if (!a->animation.enabled)
 		return ;
 	dt = now - a->last_ts;
 	if (dt < (1.0 / 60.0))
@@ -67,6 +67,6 @@ void	anim_update(t_app *a, double now)
 	a->last_ts = now;
 	t = now;
 	orbit_camera(a, t);
-	spin_objects(&a->sc, t);
+	spin_objects(&a->scene, t);
 	a->needs_redraw = 1;
 }

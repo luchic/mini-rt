@@ -1,5 +1,6 @@
 #include "ft_minirt.h"
 #include "tetris.h"
+#include "tetris.h"
 #include <string.h>
 
 /* --- util --- */
@@ -14,7 +15,7 @@ static t_rgb rgb_u8(int r, int g, int b)
 	if (g > 255) g = 255;
     if (b < 0) b = 0; 
 	if (b > 255) b = 255;
-    c.r = (unsigned char)r; c.g = (unsigned char)g; c.b = (unsigned char)b;
+    c.red = (unsigned char)r; c.green = (unsigned char)g; c.blue = (unsigned char)b;
     return c;
 }
 
@@ -25,7 +26,7 @@ static void board_clear(int *b)
 }
 
 /* Pastikan pool sphere dibuat SEKALI untuk app yang Tetris-enabled */
-static void ensure_pool(t_app *a, t_ts *st)
+static void ensure_pool(t_app *a, t_tetris *st)
 {
     int i;
 
@@ -33,7 +34,7 @@ static void ensure_pool(t_app *a, t_ts *st)
 
     st->cell = 0.6f;
     st->z    = -8.0f;
-    st->org  = v3(-(float)T_W * st->cell * 0.5f,
+    st->org  = vec3(-(float)T_W * st->cell * 0.5f,
                    (float)T_H * st->cell * 0.5f,
                    st->z);
 
@@ -43,14 +44,14 @@ static void ensure_pool(t_app *a, t_ts *st)
     while (i < POOL) {
         t_sphere *sp = (t_sphere *)emalloc(sizeof(t_sphere));
         t_obj    *o  = (t_obj *)emalloc(sizeof(t_obj));
-        sp->c = v3(0,0,0); sp->r = 0.0f;
-        sp->m.color = rgb_u8(230,230,230);
-        sp->m.checker = 0; sp->m.specular = 0.25f; sp->m.sp_exp = 48; sp->m.bump = 0;
+        sp->center = vec3(0,0,0); sp->radius = 0.0f;
+        sp->material.color = rgb_u8(230,230,230);
+        sp->material.checker = 0; sp->material.specular = 0.25f; sp->material.sp_exp = 48; sp->material.bump = 0;
         o->type = OBJ_SPHERE; o->ptr = sp; o->next = NULL;
 
         /* Masuk ke scene HANYA untuk scene Tetris karena ensure_pool dipanggil
            dari tetris_simple_start() yang dipanggil saat tetris_enabled = 1 */
-        scene_add_obj(&a->sc, o);
+        scene_add_obj(&a->scene, o);
 
         st->sph[i]  = sp;
         st->pool[i] = o;
@@ -69,7 +70,7 @@ static void ensure_pool(t_app *a, t_ts *st)
     st->inited  = 1;
 }
 
-static void draw_cell(t_ts *st, int x, int y, t_rgb c)
+static void draw_cell(t_tetris *st, int x, int y, t_rgb c)
 {
     int   id;
     float r;
@@ -85,20 +86,20 @@ static void draw_cell(t_ts *st, int x, int y, t_rgb c)
 
     r = st->cell * 0.48f;
 
-    st->sph[id]->c = p;
-    st->sph[id]->r = r;
-    st->sph[id]->m.color = c;
+    st->sph[id]->center = p;
+    st->sph[id]->radius = r;
+    st->sph[id]->material.color = c;
 
     st->used = id + 1;
 }
 
-static void hide_unused(t_ts *st)
+static void hide_unused(t_tetris *st)
 {
     int i;
     if (!st) return;
     i = st->used;
     while (i < POOL) {
-        st->sph[i]->r = 0.0f;
+        st->sph[i]->radius = 0.0f;
         i++;
     }
 }
@@ -120,7 +121,7 @@ static void lock_O(int *b, int px, int py)
     b[idx(px,py+1)]   = 1; b[idx(px+1,py+1)] = 1;
 }
 
-static void render_board_and_piece(t_ts *st)
+static void render_board_and_piece(t_tetris *st)
 {
     int y, x;
 
@@ -146,7 +147,7 @@ static void render_board_and_piece(t_ts *st)
     hide_unused(st);
 }
 
-static void scripted_drop(t_ts *st, double dt)
+static void scripted_drop(t_tetris *st, double dt)
 {
     int y0;
 
@@ -175,7 +176,7 @@ static void scripted_drop(t_ts *st, double dt)
     }
 }
 
-static void step_reset(t_ts *st, double dt)
+static void step_reset(t_tetris *st, double dt)
 {
     if (!st) return;
     st->phase_t += dt;
@@ -193,20 +194,21 @@ void tetris_simple_start(t_app *a)
 {
     if (!a) return;
     if (!a->tetris)
-        a->tetris = (t_ts *)emalloc(sizeof(t_ts));
+        a->tetris = (t_tetris *)emalloc(sizeof(t_tetris));
 
-    memset(a->tetris, 0, sizeof(t_ts));  // pengganti ft_bzero
+    memset(a->tetris, 0, sizeof(t_tetris));  // pengganti ft_bzero
     ensure_pool(a, a->tetris);
-    board_clear(a->tetris->board);
-    a->tetris->target_y0 = 16;
-    a->tetris->cur_x = 0;
-    a->tetris->cur_y = 0;
-    a->tetris->last  = 0.0;
+	t_tetris *tetris = (t_tetris *)a->tetris;
+    board_clear(tetris->board);
+	tetris->target_y0 = 16;
+    tetris->cur_x = 0;
+    tetris->cur_y = 0;
+    tetris->last  = 0.0;
 }
 
 void tetris_simple_update(t_app *a, double now)
 {
-    t_ts   *st;
+    t_tetris   *st;
     double  dt;
 
     if (!a || !a->tetris_enabled) return;
