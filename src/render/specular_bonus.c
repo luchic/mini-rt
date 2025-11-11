@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   specular_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:23:09 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/18 11:15:59 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/27 14:28:57 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ t_rgb	specular_bonus(t_vec3 n, t_vec3 l, t_vec3 v, t_material *m)
 	t_rgb	spec_color;
 
 	half_vec = vnorm(vadd(l, v));
-	n_dot_h = vdot(n, half_vec);
+	n_dot_h = dot_product(n, half_vec);
 	if (n_dot_h < 0)
 		n_dot_h = 0;
 	if (m->sp_exp <= 1)
@@ -31,8 +31,8 @@ t_rgb	specular_bonus(t_vec3 n, t_vec3 l, t_vec3 v, t_material *m)
 		spec_intensity = spec_intensity * 0.2f;
 	else
 		spec_intensity = spec_intensity * m->specular;
-	spec_color.r = spec_intensity;
-	spec_color.g = spec_intensity;
-	spec_color.b = spec_intensity;
+	spec_color.red = spec_intensity;
+	spec_color.green = spec_intensity;
+	spec_color.blue = spec_intensity;
 	return (spec_color);
 }

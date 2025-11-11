@@ -3,27 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cylinder.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:20:20 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/18 11:53:42 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/27 14:33:24 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minirt.h"
-
-/* util dot(float) agar ringkas */
-static float	vdot(t_vec3 a, t_vec3 b)
-{
-	return ((float)dot_product(a, b));
-}
 
 /* proyeksi v ke sumbu 'axis'  (axis dianggap sudah ter-norm) */
 static t_vec3	vproj(t_vec3 v, t_vec3 axis)
 {
 	t_vec3	out;
 
-	out = vmul(axis, vdot(v, axis));
+	out = vmul(axis, dot_product(v, axis));
 	return (out);
 }
 
@@ -45,9 +39,9 @@ static int	cy_solve(t_vec3 rdp, t_vec3 ocp, float *t0, float *t1)
 	float	d;
 	float	sq;
 
-	a = vdot(rdp, rdp);
-	b = 2.0f * vdot(rdp, ocp);
-	c = vdot(ocp, ocp) - 0.0f;
+	a = dot_product(rdp, rdp);
+	b = 2.0f * dot_product(rdp, ocp);
+	c = dot_product(ocp, ocp) - 0.0f;
 	d = b * b - 4.0f * a * c;
 	if (d < 0.0f || a == 0.0f)
 		return (0);
@@ -64,7 +58,7 @@ static int	cy_clip(t_cylinder *cy, t_vec3 axis, t_ray r, float t)
 	float	pos;
 
 	p = vadd(r.origin, vmul(r.direction, t));
-	pos = vdot(vsub(p, cy->center), axis);
+	pos = dot_product(vsub(p, cy->center), axis);
 	if (pos < -cy->height * 0.5f)
 		return (0);
 	if (pos > cy->height * 0.5f)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bump_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:13:13 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/17 16:15:50 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/27 13:57:50 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ t_vec3	bump_bonus(t_vec3 surface_normal,
 	t_vec3	bump_vec;
 
 	amplitude = 0.25f;
-	tangent_u = vnorm(vcross(surface_normal, v3(0.0f, 1.0f, 0.0f)));
-	tangent_v = vcross(surface_normal, tangent_u);
+	tangent_u = vnorm(vcross_product(surface_normal, vec3(0.0f, 1.0f, 0.0f)));
+	tangent_v = vcross_product(surface_normal, tangent_u);
 	noise = snoise(surface_pos.x * 0.5f, surface_pos.z * 0.5f);
 	bump_vec = vadd(
 			vmul(tangent_u, (noise - 0.5f) * amplitude),

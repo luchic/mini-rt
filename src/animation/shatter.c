@@ -8,8 +8,15 @@ static t_shfx *fx(void)
 }
 
 
-static t_vec3 vproj_on_n(t_vec3 v, t_vec3 n) { return vmul(n, vdot(v, n)); }
-static float plane_signed_dist(t_vec3 p, t_plane *pl) { return vdot(vsub(p, pl->p), pl->n); }
+static t_vec3 vproj_on_n(t_vec3 v, t_vec3 n)
+{
+	return vmul(n, dot_product(v, n));
+}
+
+static float plane_signed_dist(t_vec3 p, t_plane *pl)
+{
+	return dot_product(vsub(p, pl->position), pl->normal);
+}
 
 static void collide_sphere_plane(t_physics *b, t_plane *pl, float e, float mu)
 {
@@ -20,14 +27,14 @@ static void collide_sphere_plane(t_physics *b, t_plane *pl, float e, float mu)
 
 	if (!b || !pl)
 		return ;
-	n = pl->n;
+	n = pl->normal;
 	dist = plane_signed_dist(b->pos, pl);
-	if (dist >= b->r)
+	if (dist >= b->radius)
 		return ;
-	b->pos = vadd(b->pos, vmul(n, (b->r - dist)));
+	b->pos = vadd(b->pos, vmul(n, (b->radius - dist)));
 	vn = vproj_on_n(b->vel, n);
 	vt = vsub(b->vel, vn);
-	if (vdot(vn, n) < 0.0f)
+	if (dot_product(vn, n) < 0.0f)
 		b->vel = vadd(vmul(vn, -e), vmul(vt, (1.0f - mu)));
 }
 
@@ -50,7 +57,7 @@ static t_obj *new_sphere_node(t_scene *sc, t_vec3 c, float r, t_material m)
 	if (!sc)
 		return (0);
 	s = (t_sphere *)emalloc(sizeof(*s));
-	s->c = c; s->r = r; s->m = m;
+	s->center = c; s->radius = r; s->material = m;
 	o = (t_obj *)emalloc(sizeof(*o));
 	o->type = OBJ_SPHERE; o->ptr = s; o->next = sc->objs;
 	sc->objs = o;
@@ -90,19 +97,19 @@ static void spawn_shards(t_scene *sc, t_shfx *st, t_sphere *big)
 	n = 15;
 	if (n > (int)(sizeof(st->shards) / sizeof(st->shards[0])))
 		n = sizeof(st->shards) / sizeof(st->shards[0]);
-	m = big->m;
+	m = big->material;
 	i = 0;
 	while (i < n)
 	{
 		float a  = 6.2831853f * frand01();
 		float u  = 0.2f + 0.8f * frand01();
-		t_vec3 dir = vnorm(v3(cosf(a), 0.2f + u, sinf(a)));
+		t_vec3 dir = vnorm(vec3(cosf(a), 0.2f + u, sinf(a)));
 		float v0 = 2.5f + 2.0f * frand01();
-		t_vec3 p   = vadd(big->c, vmul(dir, big->r * 0.3f));
-		st->shards[i].obj_ptr = new_sphere_node(sc, p, big->r * 0.18f, m);
+		t_vec3 p   = vadd(big->center, vmul(dir, big->radius * 0.3f));
+		st->shards[i].obj_ptr = new_sphere_node(sc, p, big->radius * 0.18f, m);
 		st->shards[i].pos = p;
 		st->shards[i].vel = vmul(dir, v0);
-		st->shards[i].r   = big->r * 0.18f;
+		st->shards[i].radius   = big->radius * 0.18f;
 		st->shards[i].active = 1;
 		i++;
 	}
@@ -114,8 +121,8 @@ static int impact_happened(t_sphere *big, t_plane *pl)
 	if (!big)
 		return (0);
 	if (pl)
-		return (plane_signed_dist(big->c, pl) <= big->r);
-	return (big->c.y <= big->r);
+		return (plane_signed_dist(big->center, pl) <= big->radius);
+	return (big->center.y <= big->radius);
 }
 
 /* ====== API ====== */
@@ -131,14 +138,14 @@ void	shfx_trigger(t_app *a)
 	st = fx();
 	st->enabled = 1;
 	st->phase = 0;
-	st->big_obj = find_first(&a->sc, OBJ_SPHERE);
-	st->ground  = find_ground(&a->sc);
+	st->big_obj = find_first(&a->scene, OBJ_SPHERE);
+	st->ground  = find_ground(&a->scene);
 	st->g = 9.8f; st->bounce = 0.35f; st->fric = 0.10f; st->count = 0;
 	if (!st->big_obj || !st->big_obj->ptr)
 		return ;
 	s = (t_sphere *)st->big_obj->ptr;
-	if (s->c.y < s->r + 0.1f)
-		s->c.y = s->r + 0.1f;
+	if (s->center.y < s->radius + 0.1f)
+		s->center.y = s->radius + 0.1f;
 }
 
 void	shfx_update(t_app *a, double now)
@@ -163,11 +170,11 @@ void	shfx_update(t_app *a, double now)
 	if (st->phase == 0)
 	{
 		t_sphere *s = (t_sphere *)st->big_obj->ptr;
-		s->c.y = s->c.y - st->g * (float)dt;
+		s->center.y = s->center.y - st->g * (float)dt;
 		if (impact_happened(s, st->ground))
 		{
-			spawn_shards(&a->sc, st, s);
-			s->r = 0.0f; /* sembunyikan sphere besar */
+			spawn_shards(&a->scene, st, s);
+			s->radius = 0.0f; /* sembunyikan sphere besar */
 			st->phase = 1;
 		}
 		a->needs_redraw = 1;
@@ -184,7 +191,7 @@ void	shfx_update(t_app *a, double now)
 			t_obj    *o = (t_obj *)b->obj_ptr;
 			t_sphere *s = (t_sphere *)o->ptr;
 			if (s)
-				s->c = b->pos;
+				s->center = b->pos;
 		}
 		i++;
 	}
