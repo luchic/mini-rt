@@ -1,4 +1,5 @@
 #include "ft_minirt.h"
+#include <math.h>
 
 t_vec3	vec3(float x, float y, float z)
 {
@@ -25,12 +26,12 @@ t_vec3	vnorm(t_vec3 a)
 	return (vec3(a.x / length, a.y / length, a.z / length));
 }
 
-t_ray	ray(t_vec3 o, t_vec3 d)
+t_ray	ray(t_vec3 origin, t_vec3 direction)
 {
 	t_ray	r;
 
-	r.o = o;
-	r.d = d;
+	r.origin = origin;
+	r.direction = direction;
 	return (r);
 }
 
