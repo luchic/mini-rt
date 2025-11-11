@@ -1,5 +1,5 @@
 #include "ft_minirt.h"
-#include "libft.h"
+#include "tetris.h"
 
 static void	image_create(t_app *app, int width, int height)
 {
@@ -42,15 +42,13 @@ void	init_tetris(t_app *app, const char *scene)
 
 void	init_app(t_app *app, const char *scene)
 {
-	if (!ends_with_rt(scene))
+	if (!has_rt_extension(scene))
 		ft_exit("Usage: ./miniRT <scene.rt>", 1);
-	ft_bzero(app, sizeof(app));
+	ft_bzero(app, sizeof(t_app));
 	if (!parse_file(scene, &app->scene))
 		ft_exit("parse failed", 1);
-
 	camera_build(&app->scene.camera);
 	init_tetris(app, scene);
-	cam_anim_init(app);
-
+	init_camera_animation(app);
 	init_window(app);
 }
