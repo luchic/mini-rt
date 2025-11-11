@@ -7,7 +7,9 @@
 #define T_H  20
 #define POOL (T_W * T_H) /* maksimum sphere pool */
 
-typedef struct s_ts {
+
+typedef struct s_tetris
+{
     int      inited;
     float    cell;
     t_vec3     org;
@@ -26,7 +28,7 @@ typedef struct s_ts {
     int      cur_x;      /* kolom O-piece (per 2 kolom) */
     int      cur_y;      /* posisi y atas piece */
     double   last;       /* timestamp frame sebelumnya (hindari static) */
-} t_ts;
+} t_tetris;
 
 /* API */
 void tetris_simple_start(t_app *a);

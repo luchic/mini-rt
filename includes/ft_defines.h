@@ -15,7 +15,7 @@ typedef enum e_objtype
 {
 	OBJ_SPHERE,
 	OBJ_PLANE,
-	OBJ_CYL,
+	OBJ_CYLINDER,
 	OBJ_CONE
 }						t_objtype;
 
@@ -26,6 +26,23 @@ typedef struct s_vec3
 	float				z;
 }						t_vec3;
 
+typedef struct s_rgb
+{
+	float				red;
+	float				green;
+	float				blue;
+}						t_rgb;
+
+
+typedef struct s_material
+{
+	t_rgb				color;
+	int					checker;
+	float				specular;
+	float				sp_exp;
+	int					bump;
+}						t_material;
+
 typedef struct s_ray
 {
 	t_vec3				origin;
@@ -34,13 +51,6 @@ typedef struct s_ray
 	t_vec3				normal;
 	t_material			material;
 }						t_ray;
-
-typedef struct s_rgb
-{
-	float				red;
-	float				green;
-	float				blue;
-}						t_rgb;
 
 typedef struct s_img
 {
@@ -65,15 +75,6 @@ typedef struct s_light
 	float				br;
 	struct s_light		*next;
 }						t_light;
-
-typedef struct s_material
-{
-	t_rgb				color;
-	int					checker;
-	float				specular;
-	float				sp_exp;
-	int					bump;
-}						t_material;
 
 typedef struct s_sphere
 {
