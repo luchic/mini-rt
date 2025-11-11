@@ -3,25 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   trace.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:17:24 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/18 11:50:56 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/10/27 15:51:03 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include "ft_minirt.h"
-
-/* Forward declarations untuk hitter (disediakan di modul lain) */
-int	hit_sphere(t_sphere *sp, t_ray r, float tmax,
-		float *t, t_vec3 *n, t_material *m);
-int	hit_plane(t_plane *pl, t_ray r, float tmax,
-		float *t, t_vec3 *n, t_material *m);
-int	hit_cylinder(t_cylinder *cy, t_ray r, float tmax,
-		float *t, t_vec3 *n, t_material *m);
-int	hit_cone(t_cone *co, t_ray r, float tmax,
-		float *t, t_vec3 *n, t_material *m);
 
 /* ============================ tracing ============================ */
 
@@ -29,6 +19,7 @@ static int	try_hit_node(t_obj *node, t_ray r, float tmax, t_ray *hit_out)
 {
 	float		t;
 	t_vec3		n;
+	t_ray		rec;
 	t_material	m;
 	int			ok;
 
@@ -37,10 +28,10 @@ static int	try_hit_node(t_obj *node, t_ray r, float tmax, t_ray *hit_out)
 		ok = hit_sphere((t_sphere *)node->ptr, r, tmax, &t, &n, &m);
 	else if (node->type == OBJ_PLANE)
 		ok = hit_plane((t_plane *)node->ptr, r, tmax, &t, &n, &m);
-	else if (node->type == OBJ_CYL)
-		ok = hit_cylinder((t_cylinder *)node->ptr, r, tmax, &t, &n, &m);
+	else if (node->type == OBJ_CYLINDER)
+		ok = hit_cylinder((t_cylinder *)node->ptr, r, tmax, &rec);
 	else if (node->type == OBJ_CONE)
-		ok = hit_cone((t_cone *)node->ptr, r, tmax, &t, &n, &m);
+		ok = hit_cone((t_cone *)node->ptr, r, tmax, &rec);
 	if (!ok)
 		return (0);
 	hit_out->t = t;
