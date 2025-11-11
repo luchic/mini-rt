@@ -11,13 +11,11 @@ static int	set_light(t_scene *scene, t_light *light, int bonus_multi)
 {
 	t_light	*it;
 
-	ft_printf("Light %p\n", light);
 	if (!scene->lights)
 		scene->lights = light;
 	else
 	{
 		it = scene->lights;
-		ft_printf("Adding light at pos %p\n", it);
 		while (it->next)
 			it = it->next;
 		it->next = light;
