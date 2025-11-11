@@ -1,4 +1,5 @@
 #include "ft_minirt.h"
+#include "tetris.h"
 
 static void	on_close(void *param)
 {
@@ -20,7 +21,7 @@ static void	on_key(mlx_key_data_t key, void *param)
 		mlx_close_window(app->mlx);
 	if (key.key == MLX_KEY_S && key.action == MLX_PRESS)
 		shfx_trigger(app);
-	cam_anim_on_key(key, app);
+	// cam_anim_on_key(key, app);
 }
 
 static void	on_loop(void *param)
@@ -37,10 +38,10 @@ static void	on_loop(void *param)
 		tetris_simple_update(app, now);
 
 	shfx_update(app, now);
-	cam_anim_update(app, now);
+	// cam_anim_update(app, now);
 	app->last_ts = now;
-	if (app->needs_redraw)
-		render(app);
+	// if (app->needs_redraw)
+		// render(app);
 }
 
 

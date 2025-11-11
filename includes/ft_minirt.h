@@ -75,4 +75,28 @@ int		parse_color(const char *s, t_rgb *color);
 int		parse_v3(const char *s, t_vec3 *v);
 int		parse_norm_v3(const char *s, t_vec3 *v);
 int		parse_cone_bonus(char **tokens, t_scene *scene);
+
+// ======================= anim ===========================
+void	shfx_trigger(t_app *a);
+void	shfx_update(t_app *a, double now);
+void	rng_seed(t_app *app, unsigned int seed_value);
+float	rng_random01(t_app *app);
+
+// ====================== render =======================
+int		hit_sphere(t_sphere *sp, t_ray r, float tmax, float *t, t_vec3 *n,
+			t_material *m);
+int		hit_plane(t_plane *pl, t_ray r, float tmax, float *t, t_vec3 *n,
+			t_material *m);
+int		hit_cylinder(t_cylinder *cy, t_ray ray, float tmax, t_ray *rec);
+int		hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec);
+void	render(t_app *a);
+int		trace_ray(t_scene *sc, t_ray r, t_rgb *out_color);
+int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 ldir, float ldist);
+t_rgb	shade(t_scene *sc, t_ray hit_view, t_vec3 normal, t_material *mat);
+void	image_put_px(t_img *img, int x, int y, t_rgb color);
+
+
+void	image_destroy(t_app *app);
+t_obj *find_first(t_scene *sc, t_objtype type);
+
 #endif

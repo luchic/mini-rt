@@ -5,7 +5,7 @@ UNAME_S		:= $(shell uname -s)
 # ---- MLX42 (auto-clone & build) -------------------------------------------
 MLX42_DIR	:= MLX42
 MLX42_REPO	:= https://github.com/codam-coding-college/MLX42.git
-MLX_INC		:= -I$(MLX42_DIR)/include
+MLX_INC		:= -I$(MLX42_DIR)/include/MLX42
 MLX_LIB		:= $(MLX42_DIR)/build/libmlx42.a
 
 ifeq ($(UNAME_S),Darwin)
@@ -24,10 +24,11 @@ FT = ft
 SRC = src/
 
 RENDER = $(SRC)render/
-PARSE = $(SRC)parse/
+PARSER = $(SRC)parser/
 MATH = $(SRC)math/
 UTILS = $(SRC)utils/
 ANIMATION = $(SRC)animation/
+INIT = $(SRC)init/
 
 
 SRC_FILES = $(SRC)main.c
@@ -36,7 +37,7 @@ SRC_FILES = $(SRC)main.c
 SRC_FILES += $(wildcard $(RENDER)*.c)
 
 #Parse
-SRC_FILES += $(wildcard $(PARSE)*.c)
+SRC_FILES += $(wildcard $(PARSER)*.c)
 
 #Math
 SRC_FILES += $(wildcard $(MATH)*.c)
@@ -46,6 +47,9 @@ SRC_FILES += $(wildcard $(UTILS)*.c)
 
 #Animation
 SRC_FILES += $(wildcard $(ANIMATION)*.c)
+
+#MLX Windowing
+SRC_FILES += $(wildcard $(INIT)*.c)
 
 OBJS = $(SRC_FILES:.c=.o)
 
@@ -64,16 +68,15 @@ DEBUG =	-g -fsanitize=address
 all: $(NAME)
 
 
-$(NAME): $(OBJS) $(MLX_LIB) $(LIBFT)
+$(NAME): $(MLX_LIB) $(LIBFT) $(OBJS)
 	@echo ">> Linking final executable..."
 	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LIBS)
 
+debug: CFLAGS += $(DEBUG)
+debug: $(NAME)
+
 bonus: CFLAGS += -DBONUS=1
 bonus: $(OBJS) $(BONUS_OBJS) $(MLX_LIB) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(BONUS_OBJS) $(LIBS)
-
-bonus-d: CFLAGS += -DBONUS=1 -g -fsanitize=address
-bonus-d: $(OBJS) $(BONUS_OBJS) $(MLX_LIB) $(LIBFT)
 	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(BONUS_OBJS) $(LIBS)
 
 $(LIBFT):
@@ -111,7 +114,7 @@ fclean: clean
 
 re: fclean all
 
-mlx42clean:
+mlxclean:
 	@rm -rf "$(MLX42_DIR)/build"
 
-.PHONY: all clean fclean re bonus mlx42clean
+.PHONY: all clean fclean re bonus mlxclean debug
