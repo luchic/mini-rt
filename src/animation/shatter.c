@@ -64,7 +64,7 @@ static t_obj *new_sphere_node(t_scene *sc, t_vec3 c, float r, t_material m)
 	return (o);
 }
 
-static t_obj *find_first(t_scene *sc, t_objtype type)
+t_obj *find_first(t_scene *sc, t_objtype type)
 {
 	t_obj *o;
 
@@ -86,7 +86,7 @@ static t_plane *find_ground(t_scene *sc)
 	return (o ? (t_plane *)o->ptr : 0);
 }
 
-static void spawn_shards(t_scene *sc, t_shfx *st, t_sphere *big)
+static void spawn_shards(t_app *app, t_scene *sc, t_shfx *st, t_sphere *big)
 {
 	int   i;
 	int   n;
@@ -101,10 +101,10 @@ static void spawn_shards(t_scene *sc, t_shfx *st, t_sphere *big)
 	i = 0;
 	while (i < n)
 	{
-		float a  = 6.2831853f * frand01();
-		float u  = 0.2f + 0.8f * frand01();
+		float a  = 6.2831853f * rng_random01(app);
+		float u  = 0.2f + 0.8f * rng_random01(app);
 		t_vec3 dir = vnorm(vec3(cosf(a), 0.2f + u, sinf(a)));
-		float v0 = 2.5f + 2.0f * frand01();
+		float v0 = 2.5f + 2.0f * rng_random01(app);
 		t_vec3 p   = vadd(big->center, vmul(dir, big->radius * 0.3f));
 		st->shards[i].obj_ptr = new_sphere_node(sc, p, big->radius * 0.18f, m);
 		st->shards[i].pos = p;
@@ -133,7 +133,7 @@ void	shfx_trigger(t_app *a)
 
 	if (!a)
 		return ;
-	frand_seed(0xC0FFEEu);
+	rng_seed(a, 0xC0FFEEu);
 	a->last_ts = mlx_get_time();
 	st = fx();
 	st->enabled = 1;
@@ -173,7 +173,7 @@ void	shfx_update(t_app *a, double now)
 		s->center.y = s->center.y - st->g * (float)dt;
 		if (impact_happened(s, st->ground))
 		{
-			spawn_shards(&a->scene, st, s);
+			spawn_shards(a, &a->scene, st, s);
 			s->radius = 0.0f; /* sembunyikan sphere besar */
 			st->phase = 1;
 		}
