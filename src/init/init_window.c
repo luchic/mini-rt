@@ -39,7 +39,6 @@ void	init_tetris(t_app *app, const char *scene)
 	app->last_ts = mlx_get_time();
 }
 
-
 void	init_app(t_app *app, const char *scene)
 {
 	if (!has_rt_extension(scene))
