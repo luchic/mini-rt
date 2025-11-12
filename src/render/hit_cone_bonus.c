@@ -6,46 +6,29 @@
 /*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:19:46 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/27 14:33:37 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/11/12 11:17:17 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minirt.h"
 
-/* proyeksi ke sumbu (axis asumsi ter-norm), serta komponennya yang tegak lurus */
-static t_vec3	vproj(t_vec3 v, t_vec3 axis)
-{
-	return (vmul(axis, dot_product(v, axis)));
-}
-
-static t_vec3	vrej(t_vec3 v, t_vec3 axis)
-{
-	return (vsub(v, vproj(v, axis)));
-}
-
-/* kuadratik kerucut tak-terbatas (double-cone), k = tan(angle) */
-static int	cone_solve(t_vec3 rdp, t_vec3 ocp, float dv, float ov, float k,
-		float *t0, float *t1)
+// Perpendicular component (rejection from the axis)
+static int	cone_solve(t_hit_context context, double x[2])
 {
 	float	a;
 	float	b;
 	float	c;
-	float	d;
-	float	sq;
 
-	a = dot_product(rdp, rdp) - (k * k) * (dv * dv);
-	b = 2.0f * (dot_product(rdp, ocp) - (k * k) * dv * ov);
-	c = dot_product(ocp, ocp) - (k * k) * (ov * ov);
-	d = b * b - 4.0f * a * c;
-	if (d < 0.0f || a == 0.0f)
-		return (0);
-	sq = sqrtf(d);
-	*t0 = (-b - sq) / (2.0f * a);
-	*t1 = (-b + sq) / (2.0f * a);
-	return (1);
+	a = dot_product(context.rdp, context.rdp)
+		- (context.k * context.k) * (context.dv * context.dv);
+	b = 2.0f * (dot_product(context.rdp, context.ocp)
+			- (context.k * context.k) * context.dv * context.ov);
+	c = dot_product(context.ocp, context.ocp)
+		- (context.k * context.k) * (context.ov * context.ov);
+	return (solve_quadratic(a, b, c, x));
 }
 
-/* klip tinggi simetris: |pos sepanjang sumbu| <= height/2 */
+/* Quadratic for an infinite (double) cone, k = tan(angle) */
 static int	cone_clip_height(t_cone *co, t_vec3 axis, t_vec3 p)
 {
 	float	pos;
@@ -58,7 +41,7 @@ static int	cone_clip_height(t_cone *co, t_vec3 axis, t_vec3 p)
 	return (1);
 }
 
-/* normal sisi kerucut (tanpa caps) */
+/* Symmetric height clipping: |position along the axis| <= height/2 */
 static t_vec3	cone_normal(t_cone *co, t_vec3 axis, t_vec3 p, float k)
 {
 	t_vec3	from_c;
@@ -67,47 +50,38 @@ static t_vec3	cone_normal(t_cone *co, t_vec3 axis, t_vec3 p, float k)
 	float	s;
 
 	from_c = vsub(p, co->center);
-	radial = vrej(from_c, axis);
+	radial = vec3_reject_from_axis(from_c, axis);
 	lenr = dot_product(radial, vnorm(radial));
 	s = sqrtf(1.0f + k * k);
-	/* arah normal: radial - axis * (|radial| * k / s) */
 	return (vnorm(vsub(radial, vmul(axis, (lenr * k) / s))));
 }
 
-/* === API utama: ≤4 argumen, pakai t_ray* sebagai "hit record" === */
+/* Symmetric height clipping: |position along the axis| <= height/2 */
 int	hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec)
 {
-	t_vec3	axis;
-	t_vec3	oc;
-	t_vec3	rdp;
-	t_vec3	ocp;
-	float	k;
-	float	dv;
-	float	ov;
-	float	t0;
-	float	t1;
-	float	t;
-	t_vec3	p;
+	double				x[2];
+	float				t;
+	t_vec3				p;
+	t_hit_context		context;
 
-	axis = vnorm(co->axis);
-	k = tanf(co->angle);
-	oc = vsub(ray.origin, co->center);
-	dv = dot_product(ray.direction, axis);
-	ov = dot_product(oc, axis);
-	rdp = vrej(ray.direction, axis);
-	ocp = vrej(oc, axis);
-	if (!cone_solve(rdp, ocp, dv, ov, k, &t0, &t1))
+	context.axis = vnorm(co->axis);
+	context.k = tanf(co->angle);
+	context.oc = vsub(ray.origin, co->center);
+	context.dv = dot_product(ray.direction, context.axis);
+	context.ov = dot_product(context.oc, context.axis);
+	context.rdp = vec3_reject_from_axis(ray.direction, context.axis);
+	context.ocp = vec3_reject_from_axis(context.oc, context.axis);
+	if (!cone_solve(context, x))
 		return (0);
-	t = t0;
+	t = x[0];
 	if (t < EPS)
-		t = t1;
+		t = x[1];
 	if (t < EPS || t > tmax)
 		return (0);
 	p = vadd(ray.origin, vmul(ray.direction, t));
-	if (!cone_clip_height(co, axis, p))
+	if (!cone_clip_height(co, context.axis, p))
 		return (0);
-	rec->t = t;
-	rec->normal = cone_normal(co, axis, p, k);
+	rec->normal = cone_normal(co, context.axis, p, context.k);
 	rec->material = co->material;
-	return (1);
+	return (rec->t = t, 1);
 }

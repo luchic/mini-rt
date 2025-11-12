@@ -6,49 +6,23 @@
 /*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:20:20 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/27 14:33:24 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/11/12 10:59:01 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minirt.h"
 
-/* proyeksi v ke sumbu 'axis'  (axis dianggap sudah ter-norm) */
-static t_vec3	vproj(t_vec3 v, t_vec3 axis)
-{
-	t_vec3	out;
-
-	out = vmul(axis, dot_product(v, axis));
-	return (out);
-}
-
-/* komponen tegak lurus sumbu: v - proj_axis(v) */
-static t_vec3	vrej(t_vec3 v, t_vec3 axis)
-{
-	t_vec3	out;
-
-	out = vsub(v, vproj(v, axis));
-	return (out);
-}
-
 /* selesaikan kuadratik untuk sisi tabung (tanpa tutup/caps) */
-static int	cy_solve(t_vec3 rdp, t_vec3 ocp, float *t0, float *t1)
+static int	cy_solve(t_vec3 rdp, t_vec3 ocp, double x[2])
 {
 	float	a;
 	float	b;
 	float	c;
-	float	d;
-	float	sq;
 
 	a = dot_product(rdp, rdp);
 	b = 2.0f * dot_product(rdp, ocp);
 	c = dot_product(ocp, ocp) - 0.0f;
-	d = b * b - 4.0f * a * c;
-	if (d < 0.0f || a == 0.0f)
-		return (0);
-	sq = sqrtf(d);
-	*t0 = (-b - sq) / (2.0f * a);
-	*t1 = (-b + sq) / (2.0f * a);
-	return (1);
+	return (solve_quadratic(a, b, c, x));
 }
 
 /* cek posisi sepanjang sumbu: |pos| <= height/2 */
@@ -73,34 +47,30 @@ static t_vec3	cy_normal(t_cylinder *cy, t_vec3 axis, t_ray r, float t)
 	t_vec3	perp;
 
 	p = vadd(r.origin, vmul(r.direction, t));
-	perp = vrej(vsub(p, cy->center), axis);
+	perp = vec3_reject_from_axis(vsub(p, cy->center), axis);
 	return (vnorm(perp));
 }
 
 /* hit cylinder (tanpa caps), pakai t_ray* sebagai "hit record" */
 int	hit_cylinder(t_cylinder *cy, t_ray ray, float tmax, t_ray *rec)
 {
-	t_vec3	axis;
-	t_vec3	oc;
-	t_vec3	rdp;
-	t_vec3	ocp;
-	float	t0;
-	float	t1;
+	t_hit_context	context;
+	double			x[2];
 
-	axis = vnorm(cy->axis);
-	oc = vsub(ray.origin, cy->center);
-	rdp = vrej(ray.direction, axis);
-	ocp = vrej(oc, axis);
-	if (!cy_solve(rdp, ocp, &t0, &t1))
+	context.axis = vnorm(cy->axis);
+	context.oc = vsub(ray.origin, cy->center);
+	context.rdp = vec3_reject_from_axis(ray.direction, context.axis);
+	context.ocp = vec3_reject_from_axis(context.oc, context.axis);
+	if (!cy_solve(context.rdp, context.ocp, x))
 		return (0);
-	if (t0 < EPS)
-		t0 = t1;
-	if (t0 < EPS || t0 > tmax)
+	if (x[0] < EPS)
+		x[0] = x[1];
+	if (x[0] < EPS || x[0] > tmax)
 		return (0);
-	if (!cy_clip(cy, axis, ray, t0))
+	if (!cy_clip(cy, context.axis, ray, x[0]))
 		return (0);
-	rec->t = t0;
-	rec->normal = cy_normal(cy, axis, ray, rec->t);
+	rec->t = x[0];
+	rec->normal = cy_normal(cy, context.axis, ray, rec->t);
 	rec->material = cy->material;
 	return (1);
 }
