@@ -6,7 +6,7 @@
 /*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 11:00:46 by yyudi             #+#    #+#             */
-/*   Updated: 2025/11/11 11:20:15 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/11/12 11:10:40 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,16 @@
 static int	hit_any(t_scene *sc, t_ray ray_in, float tmax)
 {
 	t_obj		*node;
-	float		t_candidate;
-	t_vec3		n_tmp;
 	t_ray		rec_tmp;
-	t_material	m_tmp;
 
 	node = sc->objs;
 	while (node)
 	{
 		if (node->type == OBJ_SPHERE && hit_sphere((t_sphere *)node->ptr,
-				ray_in, tmax, &t_candidate, &n_tmp, &m_tmp))
+				ray_in, &rec_tmp))
 			return (1);
 		if (node->type == OBJ_PLANE && hit_plane((t_plane *)node->ptr,
-				ray_in, tmax, &t_candidate, &n_tmp, &m_tmp))
+				ray_in, tmax, &rec_tmp))
 			return (1);
 		if (node->type == OBJ_CYLINDER && hit_cylinder((t_cylinder *)node->ptr,
 				ray_in, tmax, &rec_tmp))

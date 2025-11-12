@@ -6,7 +6,7 @@
 /*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:13:19 by yyudi             #+#    #+#             */
-/*   Updated: 2025/10/27 13:58:58 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/11/12 11:19:07 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,3 @@ t_rgb	checker_bonus(t_vec3 surface_pos, t_rgb base_color)
 	};
 	return (dark);
 }
-
