@@ -171,4 +171,14 @@ typedef struct s_shfx
 	t_physics			shards[128];
 }						t_shfx;
 
+typedef struct s_hit_context {
+	t_vec3	axis;
+	t_vec3	oc;
+	t_vec3	rdp;
+	t_vec3	ocp;
+	float	dv;
+	float	ov;
+	float	k;
+}	t_hit_context;
+
 #endif
