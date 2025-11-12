@@ -10,14 +10,14 @@ static inline int	set_values(double t1, double t2, double x[2])
 {
 	if (t1 > EPS && t2 > EPS && t1 <= TMAX && t2 <= TMAX)
 	{
-		x[0] = fmin(t1, t2);
-		x[1] = fmax(t1, t2);
+		x[0] = t1;
+		x[1] = t2;
 		return (2);
 	}
 	else if (t1 > EPS && t1 <= EPS)
-		return (x[0] = t1, 1);
+		return (x[0] = t1, x[1] = t2, 1);
 	else if (t2 > EPS && t2 <= EPS)
-		return (x[0] = t2, 1);
+		return (x[0] = t1, x[1] = t2, 1);
 	else
 		return (0);
 }
