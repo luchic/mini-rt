@@ -6,14 +6,14 @@
 /*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:20:20 by yyudi             #+#    #+#             */
-/*   Updated: 2025/11/12 10:59:01 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/11/15 14:13:33 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minirt.h"
 
 /* selesaikan kuadratik untuk sisi tabung (tanpa tutup/caps) */
-static int	cy_solve(t_vec3 rdp, t_vec3 ocp, double x[2])
+static int	cy_solve(t_vec3 rdp, t_vec3 ocp, float radius, double x[2])
 {
 	float	a;
 	float	b;
@@ -21,7 +21,7 @@ static int	cy_solve(t_vec3 rdp, t_vec3 ocp, double x[2])
 
 	a = dot_product(rdp, rdp);
 	b = 2.0f * dot_product(rdp, ocp);
-	c = dot_product(ocp, ocp) - 0.0f;
+	c = dot_product(ocp, ocp) - radius * radius;
 	return (solve_quadratic(a, b, c, x));
 }
 
@@ -61,7 +61,7 @@ int	hit_cylinder(t_cylinder *cy, t_ray ray, float tmax, t_ray *rec)
 	context.oc = vsub(ray.origin, cy->center);
 	context.rdp = vec3_reject_from_axis(ray.direction, context.axis);
 	context.ocp = vec3_reject_from_axis(context.oc, context.axis);
-	if (!cy_solve(context.rdp, context.ocp, x))
+	if (!cy_solve(context.rdp, context.ocp, cy->radius, x))
 		return (0);
 	if (x[0] < EPS)
 		x[0] = x[1];
