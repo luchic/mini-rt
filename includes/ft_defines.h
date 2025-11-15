@@ -9,7 +9,18 @@
 # define TMAX 1e9
 # define PI_F 3.14159265358979323846f
 
-typedef struct s_water t_water;
+typedef struct s_water {
+	int		enabled;
+	float	shimmer_strength;
+	float	ripple_intensity;
+	float	ripple_freq;
+	float	ripple_speed;
+	float	ripple_fade;
+	double	ripple_start;
+	int		ripple_active;
+	float	center_x;
+	float	center_y;
+}	t_water;
 
 typedef enum e_objtype
 {

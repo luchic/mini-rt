@@ -24,6 +24,8 @@ void	init_app(t_app *app, const char *scene);
 void	camera_build(t_camera *camera);
 void	setup_hooks(t_app *app);
 void	init_camera_animation(t_app *app);
+void	anim_init(t_app *app);
+void	cam_anim_update(t_app *app, double now);
 
 // ====================== math =======================
 t_vec3	vec3(float x, float y, float z);
