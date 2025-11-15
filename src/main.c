@@ -13,9 +13,6 @@ int	main(int argc, char **argv)
 	init_app(&app, argv[1]);
 	render(&app);
 
-	if (!app.tetris_enabled && find_first(&app.scene, OBJ_SPHERE))
-		shfx_trigger(&app);
-
 	setup_hooks(&app);
 	mlx_loop(app.mlx);
 	image_destroy(&app);

@@ -1,5 +1,4 @@
 #include "ft_minirt.h"
-#include "tetris.h"
 
 static void	image_create(t_app *app, int width, int height)
 {
@@ -29,16 +28,20 @@ static void	init_window(t_app *app)
 	image_create(app, app->width, app->height);
 }
 
-void	init_tetris(t_app *app, const char *scene)
-{
-	app->tetris_enabled = (ft_strstr(scene, "tetris") != NULL);
-	app->tetris = NULL;
-	if (app->tetris_enabled)
-		tetris_simple_start(app);
-	app->needs_redraw = 1;
-	app->last_ts = mlx_get_time();
-}
 
+
+// void	init_app(t_app *app, const char *scene)
+// {
+// 	if (!has_rt_extension(scene))
+// 		ft_exit("Usage: ./miniRT <scene.rt>", 1);
+// 	ft_bzero(app, sizeof(t_app));
+// 	if (!parse_file(scene, &app->scene))
+// 		ft_exit("parse failed", 1);
+// 	camera_build(&app->scene.camera);
+// 	init_tetris(app, scene);
+// 	init_camera_animation(app);
+// 	init_window(app);
+// }
 
 void	init_app(t_app *app, const char *scene)
 {
@@ -48,7 +51,10 @@ void	init_app(t_app *app, const char *scene)
 	if (!parse_file(scene, &app->scene))
 		ft_exit("parse failed", 1);
 	camera_build(&app->scene.camera);
-	init_tetris(app, scene);
 	init_camera_animation(app);
+
+	water_init(app);
+	rng_seed(app, 2463534242u);
+
 	init_window(app);
 }

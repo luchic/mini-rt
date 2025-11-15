@@ -94,7 +94,7 @@ static void spawn_shards(t_app *app, t_scene *sc, t_shfx *st, t_sphere *big)
 
 	if (!sc || !st || !big)
 		return ;
-	n = 15;
+	n = 5;
 	if (n > (int)(sizeof(st->shards) / sizeof(st->shards[0])))
 		n = sizeof(st->shards) / sizeof(st->shards[0]);
 	m = big->material;

@@ -12,7 +12,11 @@
 
 void	init_camera_animation(t_app *app)
 {
-	if (app)
-		app->animation.enabled = 0;
-	// g_mode = LIGHT_NORMAL;
+	if (!app)
+		return ;
+	app->animation.enabled = 1;
+	app->animation.speed = 0.6f;
+	app->animation.radius = 4.0f;
+	anim_init(app);
 }
+
