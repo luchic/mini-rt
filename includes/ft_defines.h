@@ -9,7 +9,7 @@
 # define TMAX 1e9
 # define PI_F 3.14159265358979323846f
 
-typedef struct s_tetris	t_tetris;
+typedef struct s_water t_water;
 
 typedef enum e_objtype
 {
@@ -142,10 +142,9 @@ typedef struct s_app
 	t_img				img;
 	t_scene				scene;
 	t_animation			animation;
+	t_water				water;
 	int					needs_redraw;
 	double				last_ts;
-	int					tetris_enabled;
-	t_tetris			*tetris;
 	unsigned int		rng_seed;
 }						t_app;
 
