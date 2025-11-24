@@ -1,16 +1,21 @@
 #include "ft_minirt.h"
 
-/* ========================= camera & render ======================= */
-
 static void	build_cam_basis(t_camera *c)
 {
+	t_vec3	forward;
 	t_vec3	world_up;
 	t_vec3	right;
 	t_vec3	up;
+	float	align;
 
+	forward = vnorm(c->direction);
 	world_up = vec3(0.0f, 1.0f, 0.0f);
-	right = vnorm(vcross_product(c->direction, world_up));
-	up = vnorm(vcross_product(right, c->direction));
+	align = fabsf((float)dot_product(forward, world_up));
+	if (align > 0.995f)
+		world_up = vec3(0.0f, 0.0f, 1.0f);
+	right = vnorm(vcross_product(forward, world_up));
+	up = vnorm(vcross_product(right, forward));
+	c->direction = forward;
 	c->right = right;
 	c->up = up;
 }
@@ -30,40 +35,34 @@ static t_ray	primary_ray(t_camera *camera, float px, float py)
 	return (ray(camera->pos, direction));
 }
 
-static t_ray	make_primary_ray(t_camera *camera, int coord[2], int w, int h)
+static t_ray	make_primary_ray(t_camera *camera, float x,
+	float y, t_render_context context)
 {
-	float	aspect;
-	float	fov_rad;
-	float	scale;
 	float	px;
 	float	py;
 
-	aspect = (float)w / (float)h;
-	fov_rad = camera->fov_deg * PI_F / 180.0f;
-	scale = tanf(fov_rad * 0.5f);
-	px = (2.0f * ((coord[0] + 0.5f) / (float)w) - 1.0f) * aspect * scale;
-	py = (1.0f - 2.0f * ((coord[1] + 0.5f) / (float)h)) * scale;
+	px = (2.0f * ((x + 0.5f) / (float)WIN_W) - 1.0f)
+		* context.aspect * context.scale;
+	py = (1.0f - 2.0f * ((y + 0.5f) / (float)WIN_H)) * context.scale;
 	return (primary_ray(camera, px, py));
 }
 
+
 static void	render_scanline(t_app *app, int y)
 {
-	int		coord[2];
-	t_ray	pr;
-	t_rgb	color;
+	int					x;
+	t_ray				pr;
+	t_rgb				color;
 
-	coord[0] = 0;
-	coord[1] = y;
-	while (coord[0] < app->width)
+	x = 0;
+	while (x < app->width)
 	{
-		pr = make_primary_ray(&app->scene.camera, coord, app->width,
-				app->height);
+		pr = make_primary_ray(&app->scene.camera, x, y, app->render_ctx);
 		if (trace_ray(&app->scene, pr, &color))
-			image_put_px(&app->img, coord[0], coord[1], color);
+			image_put_px(&app->img, x, y, color);
 		else
-			image_put_px(&app->img, coord[0],
-				coord[1], (t_rgb){0.0f, 0.0f, 0.0f});
-		coord[0]++;
+			image_put_px(&app->img, x, y, (t_rgb){0.0f, 0.0f, 0.0f});
+		x++;
 	}
 }
 
