@@ -35,16 +35,16 @@ static t_ray	primary_ray(t_camera *camera, float px, float py)
 	return (ray(camera->pos, direction));
 }
 
-static t_ray	make_primary_ray(t_camera *camera, float x,
-	float y, t_render_context context)
+static t_ray	make_primary_ray(t_app *app, float x, float y)
 {
 	float	px;
 	float	py;
 
-	px = (2.0f * ((x + 0.5f) / (float)WIN_W) - 1.0f)
-		* context.aspect * context.scale;
-	py = (1.0f - 2.0f * ((y + 0.5f) / (float)WIN_H)) * context.scale;
-	return (primary_ray(camera, px, py));
+	px = (2.0f * ((x + 0.5f) / (float)app->width) - 1.0f)
+		* app->render_ctx.aspect * app->render_ctx.scale;
+	py = (1.0f - 2.0f * ((y + 0.5f) / (float)app->height))
+		* app->render_ctx.scale;
+	return (primary_ray(&app->scene.camera, px, py));
 }
 
 
@@ -57,7 +57,7 @@ static void	render_scanline(t_app *app, int y)
 	x = 0;
 	while (x < app->width)
 	{
-		pr = make_primary_ray(&app->scene.camera, x, y, app->render_ctx);
+		pr = make_primary_ray(app, x, y);
 		if (trace_ray(&app->scene, pr, &color))
 			image_put_px(&app->img, x, y, color);
 		else
