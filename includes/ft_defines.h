@@ -77,6 +77,12 @@ typedef struct s_camera
 	float				fov_deg;
 	t_vec3				right;
 	t_vec3				up;
+
+	float				yaw;
+	float				pitch;
+	float				move_speed;
+	float 				mouse_sens;
+
 }						t_camera;
 
 typedef struct s_light
