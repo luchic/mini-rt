@@ -1,147 +1,112 @@
-// #include "ft_minirt.h"
-
-// static t_vec3 rot_y(t_vec3 v, float ang)
-// {
-// 	float c;
-// 	float s;
-// 	t_vec3  r;
-
-// 	c = cosf(ang);
-// 	s = sinf(ang);
-// 	r.x =  c * v.x + s * v.z;
-// 	r.y =  v.y;
-// 	r.z = -s * v.x + c * v.z;
-// 	return (r);
-// }
-
-// void	anim_init(t_app *a)
-// {
-// 	a->animation.enabled = 1;
-// 	a->animation.speed = 0.6f;
-// 	a->animation.radius = 4.0f;
-// 	a->last_ts = mlx_get_time();
-// }
-
-// static void orbit_camera(t_app *a, double t)
-// {
-// 	float	ang;
-// 	t_vec3	look;
-// 	t_vec3	pos;
-
-// 	ang = (float)(t * a->animation.speed);
-// 	look = vec3(0.0f, 0.0f, 0.0f);
-// 	pos = vec3(a->animation.radius, 1.5f, 0.0f);
-// 	pos = rot_y(pos, ang);
-// 	a->scene.camera.pos = pos;
-// 	a->scene.camera.direction = vnorm(vsub(look, pos));
-// 	camera_build(&a->scene.camera);
-// }
-
-// static void spin_objects(t_scene *sc, double t)
-// {
-// 	t_obj	*o;
-// 	float	ang;
-
-// 	o = sc->objs;
-// 	ang = (float)(0.4f * t);
-// 	while (o)
-// 	{
-// 		if (o->type == OBJ_PLANE)
-// 			((t_plane*)o->ptr)->normal = rot_y(((t_plane*)o->ptr)->normal, ang);
-// 		if (o->type == OBJ_CYLINDER)
-// 			((t_cylinder*)o->ptr)->axis = rot_y(((t_cylinder*)o->ptr)->axis, ang);
-// 		o = o->next;
-// 	}
-// }
-
-// void	anim_update(t_app *a, double now)
-// {
-// 	double dt;
-// 	double t;
-
-// 	if (!a->animation.enabled)
-// 		return ;
-// 	dt = now - a->last_ts;
-// 	if (dt < (1.0 / 60.0))
-// 		return ;
-// 	a->last_ts = now;
-// 	t = now;
-// 	orbit_camera(a, t);
-// 	spin_objects(&a->scene, t);
-// 	a->needs_redraw = 1;
-// }
-
 #include "ft_minirt.h"
 
-static t_vec3	rot_y(t_vec3 v, float ang)
-{
-	float	c;
-	float	s;
-	t_vec3	r;
+/* ===========================================================
+**  Utility movement vector math
+** ===========================================================
+*/
 
-	c = cosf(ang);
-	s = sinf(ang);
-	r.x = c * v.x + s * v.z;
-	r.y = v.y;
-	r.z = -s * v.x + c * v.z;
-	return (r);
+static t_vec3 vec_scale(t_vec3 v, float k)
+{
+    return vec3(v.x * k, v.y * k, v.z * k);
 }
 
-static void	orbit_camera(t_app *app, double t)
-{
-	t_vec3	pos;
-	t_vec3	look;
+/* ===========================================================
+**  Free camera movement (WASD + vertical movement)
+** ===========================================================
+*/
 
-	if (!app)
-		return ;
-	look = vec3(0.0f, 0.0f, 0.0f);
-	pos = vec3(app->animation.radius, 1.5f, 0.0f);
-	pos = rot_y(pos, (float)(t * app->animation.speed));
-	app->scene.camera.pos = pos;
-	app->scene.camera.direction = vnorm(vsub(look, pos));
-	camera_build(&app->scene.camera);
+static void camera_free_move(t_app *app, double dt)
+{
+    t_camera *cam = &app->scene.camera;
+    float speed = 3.0f * dt;
+
+    t_vec3 forward = vnorm(cam->direction);
+    t_vec3 right = vnorm(vcross_product(forward, vec3(0, 1, 0)));
+
+    if (mlx_is_key_down(app->mlx, MLX_KEY_W))
+        cam->pos = vadd(cam->pos, vec_scale(forward, speed));
+    if (mlx_is_key_down(app->mlx, MLX_KEY_S))
+        cam->pos = vsub(cam->pos, vec_scale(forward, speed));
+    if (mlx_is_key_down(app->mlx, MLX_KEY_A))
+        cam->pos = vsub(cam->pos, vec_scale(right, speed));
+    if (mlx_is_key_down(app->mlx, MLX_KEY_D))
+        cam->pos = vadd(cam->pos, vec_scale(right, speed));
+
+    if (mlx_is_key_down(app->mlx, MLX_KEY_SPACE))
+        cam->pos.y += speed;
+    if (mlx_is_key_down(app->mlx, MLX_KEY_LEFT_CONTROL))
+        cam->pos.y -= speed;
+
+    camera_build(cam);
 }
 
-static void	spin_objects(t_scene *sc, double t)
-{
-	t_obj	*node;
-	float	angle;
+/* ===========================================================
+**  Optional camera rotation (LEFT & RIGHT ARROWS)
+**  Bisa kamu aktifkan kapan saja
+** ===========================================================
+*/
 
-	if (!sc)
-		return ;
-	angle = (float)(0.4 * sin(t * 0.7));
-	node = sc->objs;
-	while (node)
-	{
-		if (node->type == OBJ_SPHERE || node->type == OBJ_CYLINDER)
-		{
-			(void)angle;
-			/* hook untuk rotasi bonus kalau mau nambah nanti */
-		}
-		node = node->next;
-	}
+static t_vec3 rot_y(t_vec3 v, float ang)
+{
+    float c = cosf(ang);
+    float s = sinf(ang);
+    return vec3(
+        c * v.x + s * v.z,
+        v.y,
+        -s * v.x + c * v.z
+    );
 }
 
-void	anim_init(t_app *app)
+static void camera_rotate(t_app *app, double dt)
 {
-	if (!app)
-		return ;
-	app->last_ts = mlx_get_time();
+    t_camera *cam = &app->scene.camera;
+    float rs = 1.5f * dt;
+
+    if (mlx_is_key_down(app->mlx, MLX_KEY_LEFT))
+        cam->direction = vnorm(rot_y(cam->direction, -rs));
+    if (mlx_is_key_down(app->mlx, MLX_KEY_RIGHT))
+        cam->direction = vnorm(rot_y(cam->direction, rs));
+
+    camera_build(cam);
 }
 
-void	cam_anim_update(t_app *app, double now)
-{
-	double	dt;
-	double	t;
+/* ===========================================================
+**  Init animation timestamp
+** ===========================================================
+*/
 
-	if (!app || !app->animation.enabled)
-		return ;
-	dt = now - app->last_ts;
-	if (dt < (1.0 / 60.0))
-		return ;
-	app->last_ts = now;
-	t = now;
-	orbit_camera(app, t);
-	spin_objects(&app->scene, t);
-	app->needs_redraw = 1;
+void anim_init(t_app *app)
+{
+    if (!app)
+        return;
+    app->last_ts = mlx_get_time();
+}
+
+/* ===========================================================
+**  Animation update per frame
+** ===========================================================
+*/
+
+void cam_anim_update(t_app *app, double now)
+{
+    double dt;
+
+    if (!app)
+        return;
+    if (!app->animation.enabled)
+        return;
+
+    dt = now - app->last_ts;
+    if (dt < (1.0 / 60.0))
+        return;
+
+    app->last_ts = now;
+
+    /* --- Free move camera --- */
+    camera_free_move(app, dt);
+
+    /* --- Optional rotation (aktifkan jika mau) --- */
+    camera_rotate(app, dt);
+
+    app->needs_redraw = 1;
 }

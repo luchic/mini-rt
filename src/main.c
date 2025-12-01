@@ -11,6 +11,7 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 		ft_exit("Usage: ./miniRT <scene.rt>", 1);
 	init_app(&app, argv[1]);
+	water_init(&app);
 	render(&app);
 
 	setup_hooks(&app);

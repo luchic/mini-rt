@@ -23,6 +23,7 @@ static void	on_key(mlx_key_data_t key, void *param)
 	if (key.key == MLX_KEY_R && key.action == MLX_PRESS)
 	{
 		water_trigger_ripple(app, 0.5f, 0.5f);
+		app->needs_redraw = 1;
 	}
 	// cam_anim_on_key(key, app);
 }
