@@ -60,6 +60,8 @@ static void	on_loop(void *param)
 
 	shfx_update(app, now);
 
+	update_lamp_sun(app);  
+
 	cam_anim_update(app, now);
 
 	water_update(app, now);
