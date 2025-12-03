@@ -14,9 +14,10 @@ void	init_camera_animation(t_app *app)
 {
 	if (!app)
 		return ;
-	app->animation.enabled = 0;
+	app->animation.enabled = 1;
 	app->animation.speed = 0.6f;
 	app->animation.radius = 4.0f;
-	anim_init(app);
+	app->last_ts = mlx_get_time();
+	//anim_init(app);
 }
 

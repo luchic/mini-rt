@@ -102,4 +102,5 @@ void	image_put_px(t_img *img, int x, int y, t_rgb color);
 void	image_destroy(t_app *app);
 t_obj *find_first(t_scene *sc, t_objtype type);
 void update_lamp_sun(t_app *app);
+void cam_anim_update(t_app *app, double now);
 #endif
