@@ -28,21 +28,6 @@ static void	init_window(t_app *app)
 	image_create(app, app->width, app->height);
 }
 
-
-
-// void	init_app(t_app *app, const char *scene)
-// {
-// 	if (!has_rt_extension(scene))
-// 		ft_exit("Usage: ./miniRT <scene.rt>", 1);
-// 	ft_bzero(app, sizeof(t_app));
-// 	if (!parse_file(scene, &app->scene))
-// 		ft_exit("parse failed", 1);
-// 	camera_build(&app->scene.camera);
-// 	init_tetris(app, scene);
-// 	init_camera_animation(app);
-// 	init_window(app);
-// }
-
 void	init_app(t_app *app, const char *scene)
 {
 	if (!has_rt_extension(scene))

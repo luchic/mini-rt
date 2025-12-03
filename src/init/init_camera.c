@@ -10,6 +10,7 @@
 // 	return (up);
 // }
 
+// g_mode = LIGHT_NORMAL;
 void	init_camera_animation(t_app *app)
 {
 	if (!app)

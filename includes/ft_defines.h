@@ -30,6 +30,13 @@ typedef enum e_objtype
 	OBJ_CONE
 }						t_objtype;
 
+typedef struct s_render_context
+{
+	float	aspect;
+	float	fov_rad;
+	float	scale;
+}			t_render_context;
+
 typedef struct s_vec3
 {
 	float				x;
@@ -160,6 +167,7 @@ typedef struct s_app
 	t_scene				scene;
 	t_animation			animation;
 	t_water				water;
+	t_render_context	render_ctx;
 	int					needs_redraw;
 	double				last_ts;
 	unsigned int		rng_seed;
@@ -186,5 +194,16 @@ typedef struct s_shfx
 	t_plane				*ground; /* lantai (optional) */
 	t_physics			shards[128];
 }						t_shfx;
+
+typedef struct s_hit_context
+{
+	t_vec3	axis;
+	t_vec3	oc;
+	t_vec3	rdp;
+	t_vec3	ocp;
+	float	dv;
+	float	ov;
+	float	k;
+}	t_hit_context;
 
 #endif

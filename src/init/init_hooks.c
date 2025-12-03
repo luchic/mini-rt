@@ -9,6 +9,7 @@ static void	on_close(void *param)
 		mlx_close_window(app->mlx);
 }
 
+// cam_anim_on_key(key, app);
 static void	on_key(mlx_key_data_t key, void *param)
 {
 	t_app	*app;
@@ -28,26 +29,6 @@ static void	on_key(mlx_key_data_t key, void *param)
 	// cam_anim_on_key(key, app);
 }
 
-// static void	on_loop(void *param)
-// {
-// 	t_app	*app;
-// 	double	now;
-
-// 	app = (t_app *)param;
-// 	if (!app)
-// 		return ;
-// 	now = mlx_get_time();
-
-// 	if (app->tetris_enabled)
-// 		tetris_simple_update(app, now);
-
-// 	shfx_update(app, now);
-// 	// cam_anim_update(app, now);
-// 	app->last_ts = now;
-// 	// if (app->needs_redraw)
-// 		// render(app);
-// }
-
 static void	on_loop(void *param)
 {
 	t_app	*app;
@@ -57,19 +38,13 @@ static void	on_loop(void *param)
 	if (!app || !app->mlx)
 		return ;
 	now = mlx_get_time();
-
 	shfx_update(app, now);
-
 	update_lamp_sun(app);  
-
 	cam_anim_update(app, now);
-
 	water_update(app, now);
-
 	if (app->needs_redraw)
 		render(app);
 }
-
 
 void	setup_hooks(t_app *app)
 {
@@ -77,4 +52,3 @@ void	setup_hooks(t_app *app)
 	mlx_key_hook(app->mlx, on_key, app);
 	mlx_loop_hook(app->mlx, on_loop, app);
 }
- 

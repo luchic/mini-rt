@@ -43,6 +43,9 @@ t_vec3	vadd(t_vec3 a, t_vec3 b);
 t_vec3	vsub(t_vec3 a, t_vec3 b);
 t_vec3	vmul(t_vec3 a, float k);
 
+t_vec3	vec3_project_on_axis(t_vec3 v, t_vec3 axis);
+t_vec3	vec3_reject_from_axis(t_vec3 v, t_vec3 axis);
+
 /**
  * @brief Solve a quadratic equation.
  * @param a Coefficient of x^2.
@@ -86,10 +89,8 @@ void	rng_seed(t_app *app, unsigned int seed_value);
 float	rng_random01(t_app *app);
 
 // ====================== render =======================
-int		hit_sphere(t_sphere *sp, t_ray r, float tmax, float *t, t_vec3 *n,
-			t_material *m);
-int		hit_plane(t_plane *pl, t_ray r, float tmax, float *t, t_vec3 *n,
-			t_material *m);
+int		hit_sphere(t_sphere *sp, t_ray ray_in, t_ray *hit_out);
+int		hit_plane(t_plane *pl, t_ray ray_in, float tmax, t_ray *ray_hit);
 int		hit_cylinder(t_cylinder *cy, t_ray ray, float tmax, t_ray *rec);
 int		hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec);
 void	render(t_app *a);
@@ -98,8 +99,23 @@ int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 ldir, float ldist);
 t_rgb	shade(t_scene *sc, t_ray hit_view, t_vec3 normal, t_material *mat);
 void	image_put_px(t_img *img, int x, int y, t_rgb color);
 
-
+void	set_render_context(t_app *app);
 void	image_destroy(t_app *app);
 t_obj *find_first(t_scene *sc, t_objtype type);
 void update_lamp_sun(t_app *app);
+t_obj	*find_first(t_scene *sc, t_objtype type);
+
+// ====================== rgb utils =========================
+t_rgb	rgb_add(t_rgb a, t_rgb b);
+t_rgb	rgb_mul(t_rgb a, float k);
+t_rgb	rgb_mod(t_rgb a, t_rgb b);
+t_rgb	rgb_clamp01(t_rgb c);
+
+t_rgb	accum_lights(t_scene *sc, t_ray hv, t_vec3 n);
+
+t_rgb	checker_bonus(t_vec3 p, t_rgb base);
+t_vec3	bump_bonus(t_vec3 n, t_vec3 p, t_material *m);
+t_rgb	specular_bonus(t_vec3 n, t_vec3 l, t_vec3 v, t_material *m);
+int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 to_l, float max_d);
+
 #endif
