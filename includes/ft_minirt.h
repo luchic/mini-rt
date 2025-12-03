@@ -96,9 +96,9 @@ int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 ldir, float ldist);
 t_rgb	shade(t_scene *sc, t_ray hit_view, t_vec3 normal, t_material *mat);
 void	image_put_px(t_img *img, int x, int y, t_rgb color);
 
-
+void	set_render_context(t_app *app);
 void	image_destroy(t_app *app);
-t_obj *find_first(t_scene *sc, t_objtype type);
+t_obj	*find_first(t_scene *sc, t_objtype type);
 
 // ====================== rgb utils =========================
 t_rgb	rgb_add(t_rgb a, t_rgb b);
