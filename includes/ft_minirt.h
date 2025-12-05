@@ -127,8 +127,7 @@ t_obj	*find_first(t_scene *sc, t_objtype type);
 t_plane 	*find_ground(t_scene *sc);
 
 
-void		collide_sphere_plane(t_physics *b, t_plane *pl, float e, float mu);
-void		phys_step(t_physics *b, float dt, float g, t_plane *pl, float e, float mu);
+void		phys_step(t_physics *b, float dt, t_shfx *st);
 
 
 void		spawn_shards(t_app *app, t_scene *sc, t_shfx *st, t_sphere *big);
