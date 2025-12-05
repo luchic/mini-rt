@@ -103,4 +103,25 @@ void	image_destroy(t_app *app);
 t_obj *find_first(t_scene *sc, t_objtype type);
 void update_lamp_sun(t_app *app);
 void cam_anim_update(t_app *app, double now);
+
+t_vec3  vproj_on_n(t_vec3 v, t_vec3 n);
+float   plane_signed_dist(t_vec3 p, t_plane *pl);
+
+t_obj	*find_first(t_scene *sc, t_objtype type);
+t_plane 	*find_ground(t_scene *sc);
+
+
+void		collide_sphere_plane(t_physics *b, t_plane *pl, float e, float mu);
+void		phys_step(t_physics *b, float dt, float g, t_plane *pl, float e, float mu);
+
+
+void		spawn_shards(t_app *app, t_scene *sc, t_shfx *st, t_sphere *big);
+
+t_shfx		*fx(void);
+int			impact_happened(t_sphere *big, t_plane *pl);
+void		shfx_trigger(t_app *a);
+
+
+void		shfx_update(t_app *a, double now);
+
 #endif
