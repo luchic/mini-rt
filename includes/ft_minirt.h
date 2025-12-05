@@ -101,9 +101,7 @@ void	image_put_px(t_img *img, int x, int y, t_rgb color);
 
 void	set_render_context(t_app *app);
 void	image_destroy(t_app *app);
-t_obj *find_first(t_scene *sc, t_objtype type);
-void update_lamp_sun(t_app *app);
-t_obj	*find_first(t_scene *sc, t_objtype type);
+void	update_lamp_sun(t_app *app);
 
 // ====================== rgb utils =========================
 t_rgb	rgb_add(t_rgb a, t_rgb b);
@@ -118,4 +116,20 @@ t_vec3	bump_bonus(t_vec3 n, t_vec3 p, t_material *m);
 t_rgb	specular_bonus(t_vec3 n, t_vec3 l, t_vec3 v, t_material *m);
 int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 to_l, float max_d);
 
+void	cam_anim_update(t_app *app, double now);
+
+t_vec3  vproj_on_n(t_vec3 v, t_vec3 n);
+float   plane_signed_dist(t_vec3 p, t_plane *pl);
+
+t_obj		*find_first(t_scene *sc, t_objtype type);
+t_plane 	*find_ground(t_scene *sc);
+
+void	collide_sphere_plane(t_physics *b, t_plane *pl, float e, float mu);
+void	phys_step(t_physics *b, float dt, float g, t_plane *pl, float e, float mu);
+void		spawn_shards(t_app *app, t_scene *sc, t_shfx *st, t_sphere *big);
+t_shfx	*fx(void);
+int		impact_happened(t_sphere *big, t_plane *pl);
+void	shfx_trigger(t_app *a);
+
+void	shfx_update(t_app *a, double now);
 #endif

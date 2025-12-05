@@ -19,7 +19,7 @@ static void	on_key(mlx_key_data_t key, void *param)
 		return ;
 	if (key.key == MLX_KEY_ESCAPE && key.action == MLX_PRESS)
 		mlx_close_window(app->mlx);
-	if (key.key == MLX_KEY_S && key.action == MLX_PRESS)
+	if (key.key == MLX_KEY_K && key.action == MLX_PRESS)
 		shfx_trigger(app);
 	if (key.key == MLX_KEY_R && key.action == MLX_PRESS)
 	{
@@ -38,12 +38,17 @@ static void	on_loop(void *param)
 	if (!app || !app->mlx)
 		return ;
 	now = mlx_get_time();
+
 	shfx_update(app, now);
 	update_lamp_sun(app);  
 	cam_anim_update(app, now);
+
 	water_update(app, now);
 	if (app->needs_redraw)
 		render(app);
+	/* `cam_anim_update` (and other updaters) manage their own timing
+	   — do not overwrite `app->last_ts` unconditionally here, it
+	   prevents the animator from seeing the elapsed time correctly. */
 }
 
 void	setup_hooks(t_app *app)
