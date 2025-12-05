@@ -1,6 +1,6 @@
 #include "ft_minirt.h"
 
-static unsigned char u8_clamp(float x)
+static unsigned char	u8_clamp(float x)
 {
 	if (x < 0.0f)
 		x = 0.0f;
@@ -11,20 +11,20 @@ static unsigned char u8_clamp(float x)
 
 static uint32_t	pack_rgba(t_rgb color)
 {
-	unsigned	char r;
-	unsigned	char g;
-	unsigned	char b;
-	unsigned	char a;
+	unsigned char	r;
+	unsigned char	g;
+	unsigned char	b;
+	unsigned char	a;
 
 	r = u8_clamp(color.red);
 	g = u8_clamp(color.green);
 	b = u8_clamp(color.blue);
 	a = 255;
 	return (((uint32_t)r << 24) | ((uint32_t)g << 16)
-	     | ((uint32_t)b << 8)  | (uint32_t)a);
+		| ((uint32_t)b << 8) | (uint32_t)a);
 }
 
-void    image_create(t_app *app, int w, int h)
+void	image_create(t_app *app, int w, int h)
 {
 	app->img.img = mlx_new_image(app->mlx, w, h);
 	if (!app->img.img)
@@ -46,10 +46,10 @@ void	image_destroy(t_app *app)
 
 void	image_put_px(t_img *img, int x, int y, t_rgb color)
 {
-	uint32_t    *pixels;
-	size_t       pixel_index;
+	uint32_t	*pixels;
+	size_t		pixel_index;
 
-	if (x < 0 || y < 0) 
+	if (x < 0 || y < 0)
 		return ;
 	if (x >= img->width || y >= img->height)
 		return ;
