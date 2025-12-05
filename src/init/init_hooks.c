@@ -39,9 +39,9 @@ static void	on_loop(void *param)
 		return ;
 	now = mlx_get_time();
 
-	shfx_update(app, now);
-	update_lamp_sun(app);  
 	cam_anim_update(app, now);
+	shfx_update(app, now);
+	update_lamp_sun(app); 
 
 	water_update(app, now);
 	if (app->needs_redraw)
