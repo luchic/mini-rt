@@ -61,9 +61,9 @@ void	shfx_update(t_app *a, double now)
 	a->last_ts = now;
 	if (st->phase == 0)
 	{
-		tshfx_phase0(a, st, dt);
+		shfx_phase0(a, st, dt);
 		return ;
 	}
-	tshfx_process_shards(a, st, dt);
+	shfx_process_shards(a, st, dt);
 	a->needs_redraw = 1;
 }

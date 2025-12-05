@@ -130,5 +130,6 @@ int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 to_l, float max_d);
 t_vec3	vproj_on_n(t_vec3 v, t_vec3 n);
 float	plane_signed_dist(t_vec3 p, t_plane *pl);
 
+void mouse_look_callback(double xpos, double ypos, void *param);
 
 #endif

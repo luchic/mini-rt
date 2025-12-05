@@ -53,7 +53,12 @@ static void	on_loop(void *param)
 
 void	setup_hooks(t_app *app)
 {
-	mlx_close_hook(app->mlx, on_close, app);
-	mlx_key_hook(app->mlx, on_key, app);
-	mlx_loop_hook(app->mlx, on_loop, app);
+    mlx_close_hook(app->mlx, on_close, app);
+    mlx_key_hook(app->mlx, on_key, app);
+
+    /* register mouse look + capture the cursor so mouse deltas work */
+    mlx_cursor_hook(app->mlx, mouse_look_callback, app);
+    mlx_set_cursor_mode(app->mlx, MLX_MOUSE_DISABLED);
+
+    mlx_loop_hook(app->mlx, on_loop, app);
 }
