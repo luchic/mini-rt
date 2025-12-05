@@ -41,8 +41,7 @@ void	shfx_update(t_app *a, double now)
 
 		b = &st->shards[i];
 		if (b->active)
-			phys_step(b, (float)dt, st->g, st->ground,
-				st->bounce, st->fric);
+			phys_step(b, (float)dt, st);
 		o = (t_obj *)b->obj_ptr;
 		if (o)
 		{
