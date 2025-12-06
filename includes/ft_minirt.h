@@ -45,6 +45,7 @@ t_vec3	vmul(t_vec3 a, float k);
 
 t_vec3	vec3_project_on_axis(t_vec3 v, t_vec3 axis);
 t_vec3	vec3_reject_from_axis(t_vec3 v, t_vec3 axis);
+t_vec3	vec_scale(t_vec3 v, float k);
 
 /**
  * @brief Solve a quadratic equation.

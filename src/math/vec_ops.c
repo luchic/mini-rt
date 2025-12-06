@@ -14,3 +14,8 @@ inline t_vec3	vmul(t_vec3 a, float k)
 {
 	return (vec3(a.x * k, a.y * k, a.z * k));
 }
+
+t_vec3	vec_scale(t_vec3 v, float k)
+{
+	return (vec3(v.x * k, v.y * k, v.z * k));
+}
