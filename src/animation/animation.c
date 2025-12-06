@@ -7,14 +7,13 @@
 
 static void	camera_free_move(t_app *app, double dt)
 {
-	t_camera	*cam;
+	t_camera	*cam = &app->scene.camera;
 	float		speed;
 	t_vec3		forward;
 	t_vec3		right;
 
 	forward = vnorm(cam->direction);
 	right = vnorm(vcross_product(forward, vec3(0, 1, 0)));
-	cam = &app->scene.camera;
 	speed = 3.0f * dt;
 	if (mlx_is_key_down(app->mlx, MLX_KEY_W))
 		cam->pos = vadd(cam->pos, vec_scale(forward, speed));
