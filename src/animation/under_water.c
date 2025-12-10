@@ -17,6 +17,7 @@ void	water_init(t_app *app)
 	fx->center_x = 0.5f;
 	fx->center_y = 0.5f;
 }
+
 void	water_trigger_ripple(t_app *app, float cx, float cy)
 {
 	t_water	*fx;
@@ -27,6 +28,7 @@ void	water_trigger_ripple(t_app *app, float cx, float cy)
 	fx->center_x = cx;
 	fx->center_y = cy;
 }
+
 void	water_update(t_app *app, double now)
 {
 	t_water	*fx;
@@ -37,6 +39,7 @@ void	water_update(t_app *app, double now)
 	if (now - fx->ripple_start > 3.0)
 		fx->ripple_active = 0;
 }
+
 void	water_apply_shimmer(t_vec3 *dir, double now, float s)
 {
 	float	w;
@@ -46,6 +49,7 @@ void	water_apply_shimmer(t_vec3 *dir, double now, float s)
 	dir->x += w;
 	dir->y += w * 0.5f;
 }
+
 void	water_apply_ripple(
 		t_vec3 *dir, t_water *fx, double now,
 		float uv_x, float uv_y)
