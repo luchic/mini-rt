@@ -7,11 +7,12 @@
 
 static void	camera_free_move(t_app *app, double dt)
 {
-	t_camera	*cam = &app->scene.camera;
+	t_camera	*cam;
 	float		speed;
 	t_vec3		forward;
 	t_vec3		right;
 
+	cam = &app->scene.camera;
 	forward = vnorm(cam->direction);
 	right = vnorm(vcross_product(forward, vec3(0, 1, 0)));
 	speed = 3.0f * dt;
