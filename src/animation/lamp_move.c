@@ -41,14 +41,6 @@ static void	set_sun_lighting(t_light *sun, float k)
 	sun->color = get_sun_color(k);
 }
 
-void	lamp_toggle(t_app *app)
-{
-	if (!app)
-		return ;
-	app->lamp_enabled ^= 1;
-	app->needs_redraw = 1;
-}
-
 void	update_lamp_sun(t_app *app)
 {
 	t_light	*sun;
