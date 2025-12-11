@@ -6,23 +6,19 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 00:00:00 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/06 12:08:01 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/11 15:52:59 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minirt.h"
 
-static double	g_last_x = 0.0;
-static double	g_last_y = 0.0;
-static int		g_first = 1;
-
-static void	init_mouse_first_frame(double xpos, double ypos)
+static void	init_mouse_first_frame(t_app *app, double xpos, double ypos)
 {
-	if (g_first)
+	if (app->mouse_first)
 	{
-		g_last_x = xpos;
-		g_last_y = ypos;
-		g_first = 0;
+		app->mouse_last_x = xpos;
+		app->mouse_last_y = ypos;
+		app->mouse_first = 0;
 	}
 }
 
@@ -60,12 +56,13 @@ void	mouse_look_callback(double xpos, double ypos, void *param)
 	cam = &app->scene.camera;
 	if (!cam)
 		return ;
-	init_mouse_first_frame(xpos, ypos);
-	dx = xpos - g_last_x;
-	dy = ypos - g_last_y;
-	g_last_x = xpos;
-	g_last_y = ypos;
+	init_mouse_first_frame(app, xpos, ypos);
+	dx = xpos - app->mouse_last_x;
+	dy = ypos - app->mouse_last_y;
+	app->mouse_last_x = xpos;
+	app->mouse_last_y = ypos;
 	update_camera_angles(cam, dx, dy);
 	compute_direction(cam);
 }
+
 

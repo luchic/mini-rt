@@ -172,6 +172,9 @@ typedef struct s_app
 	int					lamp_enabled;
 	double				last_ts;
 	unsigned int		rng_seed;
+	double				mouse_last_x;
+	double				mouse_last_y;
+	int					mouse_first;
 }						t_app;
 
 typedef struct s_physics
