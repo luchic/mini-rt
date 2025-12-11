@@ -40,6 +40,7 @@ void	init_app(t_app *app, const char *scene)
 
 	water_init(app);
 	rng_seed(app, 2463534242u);
+	app->lamp_enabled = 0;
 
 	init_window(app);
 }

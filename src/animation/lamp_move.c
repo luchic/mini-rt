@@ -41,6 +41,14 @@ static void	set_sun_lighting(t_light *sun, float k)
 	sun->color = get_sun_color(k);
 }
 
+void	lamp_toggle(t_app *app)
+{
+	if (!app)
+		return ;
+	app->lamp_enabled ^= 1;
+	app->needs_redraw = 1;
+}
+
 void	update_lamp_sun(t_app *app)
 {
 	t_light	*sun;
@@ -49,6 +57,8 @@ void	update_lamp_sun(t_app *app)
 	float	angle;
 	float	height;
 
+	if (!app || !app->lamp_enabled)
+		return ;
 	sun = app->scene.lights;
 	if (!sun)
 		return ;
@@ -58,4 +68,5 @@ void	update_lamp_sun(t_app *app)
 	height = sinf(t) * 10.0f + 15.0f;
 	set_sun_pos(sun, angle, 20.0f, height);
 	set_sun_lighting(sun, sinf(t));
+	app->needs_redraw = 1;
 }

@@ -21,6 +21,8 @@ static void	on_key(mlx_key_data_t key, void *param)
 		mlx_close_window(app->mlx);
 	if (key.key == MLX_KEY_K && key.action == MLX_PRESS)
 		shfx_trigger(app);
+	if (key.key == MLX_KEY_L && key.action == MLX_PRESS)
+		lamp_toggle(app);
 	if (key.key == MLX_KEY_R && key.action == MLX_PRESS)
 	{
 		water_trigger_ripple(app, 0.5f, 0.5f);

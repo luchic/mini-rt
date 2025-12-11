@@ -169,6 +169,7 @@ typedef struct s_app
 	t_water				water;
 	t_render_context	render_ctx;
 	int					needs_redraw;
+	int					lamp_enabled;
 	double				last_ts;
 	unsigned int		rng_seed;
 }						t_app;
