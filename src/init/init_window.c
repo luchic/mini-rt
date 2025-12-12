@@ -37,10 +37,7 @@ void	init_app(t_app *app, const char *scene)
 		ft_exit("parse failed", 1);
 	camera_build(&app->scene.camera);
 	init_camera_animation(app);
-
-	water_init(app);
 	rng_seed(app, 2463534242u);
 	app->lamp_enabled = 0;
-
 	init_window(app);
 }
