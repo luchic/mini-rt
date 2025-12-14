@@ -81,6 +81,7 @@ int		parse_color(const char *s, t_rgb *color);
 int		parse_v3(const char *s, t_vec3 *v);
 int		parse_norm_v3(const char *s, t_vec3 *v);
 int		parse_cone_bonus(char **tokens, t_scene *scene);
+int		parse_spotlight(char **tokens, t_scene *scene);
 
 // ======================= anim ===========================
 void	shfx_trigger(t_app *a);
@@ -126,6 +127,7 @@ t_rgb	checker_bonus(t_vec3 p, t_rgb base);
 t_vec3	bump_bonus(t_vec3 n, t_vec3 p, t_material *m);
 t_rgb	specular_bonus(t_vec3 n, t_vec3 l, t_vec3 v, t_material *m);
 int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 to_l, float max_d);
+t_vec3	apply_normal_map(t_objtype type, t_vec3 local_p, t_vec3 n, t_material *m);
 
 t_vec3	vproj_on_n(t_vec3 v, t_vec3 n);
 float	plane_signed_dist(t_vec3 p, t_plane *pl);

@@ -38,6 +38,8 @@ int	dispatch(char **tokens, t_scene *sc)
 		return (parse_cone_bonus(tokens, sc));
 	if (ft_strcmp(tokens[0], "pl#") == 0)
 		return (parse_bonus_plane(tokens, sc));
+	if (ft_strcmp(tokens[0], "s") == 0)
+		return (parse_spotlight(tokens, sc));
 	return (0);
 }
 
@@ -57,5 +59,7 @@ int	parse_file_line(char *line, t_scene *scene)
 		return (free_split(tokens), 1);
 	status = dispatch(tokens, scene);
 	free_split(tokens);
+	if (!status)
+		ft_printf("Parse error: '%s'\n", line);
 	return (status);
 }

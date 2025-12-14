@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_plane.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:20:52 by yyudi             #+#    #+#             */
-/*   Updated: 2025/11/12 11:17:02 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/14 18:41:11 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,26 @@ int	hit_plane(t_plane *pl, t_ray ray_in, float tmax, t_ray *ray_hit)
 	material.specular = pl->material.specular;
 	material.sp_exp = pl->material.sp_exp;
 	material.bump = pl->material.bump;
+	material.has_normal_map = pl->material.has_normal_map;
+	material.normal_tex = pl->material.normal_tex;
 	ray_hit->t = t_candidate;
 	ray_hit->normal = pl->normal;
+	ray_hit->type = OBJ_PLANE;
+	{
+		t_vec3 p;
+		t_vec3 tangent;
+		t_vec3 bitangent;
+		t_vec3 local;
+
+		p = vadd(ray_in.origin, vmul(ray_in.direction, t_candidate));
+		tangent = vnorm(vcross_product(vec3(0.0f, 1.0f, 0.0f), pl->normal));
+		if (dot_product(tangent, tangent) < EPS)
+			tangent = vnorm(vcross_product(vec3(1.0f, 0.0f, 0.0f), pl->normal));
+		bitangent = vcross_product(pl->normal, tangent);
+		local = vsub(p, pl->position);
+		ray_hit->local_p = vec3(dot_product(local, tangent), 0.0f,
+				dot_product(local, bitangent));
+	}
 	ray_hit->material = material;
 	return (1);
 }

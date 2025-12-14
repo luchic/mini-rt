@@ -59,6 +59,8 @@ typedef struct s_material
 	float				specular;
 	float				sp_exp;
 	int					bump;
+	int					has_normal_map;
+	mlx_texture_t		*normal_tex;
 }						t_material;
 
 typedef struct s_ray
@@ -68,6 +70,8 @@ typedef struct s_ray
 	float				t;
 	t_vec3				normal;
 	t_material			material;
+	t_objtype			type;
+	t_vec3				local_p;
 }						t_ray;
 
 typedef struct s_img
@@ -76,6 +80,12 @@ typedef struct s_img
 	int					width;
 	int					height;
 }						t_img;
+
+typedef enum e_lighttype
+{
+	LIGHT_POINT,
+	LIGHT_SPOT
+}						t_lighttype;
 
 typedef struct s_camera
 {
@@ -94,9 +104,12 @@ typedef struct s_camera
 
 typedef struct s_light
 {
+	t_lighttype			type;
 	t_vec3				pos;
+	t_vec3				dir;
 	t_rgb				color;
 	float				br;
+	float				cutoff_cos;
 	struct s_light		*next;
 }						t_light;
 

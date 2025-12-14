@@ -50,9 +50,12 @@ int	parse_light(char **tokens, t_scene *scene, int bonus_multi)
 	else
 		set_rgb(&color, 1.0f);
 	light = (t_light *)emalloc(sizeof(t_light));
+	light->type = LIGHT_POINT;
 	light->pos = pos;
+	light->dir = vec3(0.0f, -1.0f, 0.0f);
 	light->br = brightness;
 	light->color = color;
+	light->cutoff_cos = -1.0f;
 	light->next = NULL;
 	return (set_light(scene, light, bonus_multi));
 }
