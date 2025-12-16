@@ -1,0 +1,21 @@
+# Bonus features showcase: multi-spot lights + checker + cone + specular
+A 0.2 255,255,255
+C 0,3,12 0,-0.2,-1 70
+
+# Multi-spot colored lights
+s 5,8,3 -0.5,-1,-0.3 0.9 255,80,80 35
+s -5,8,3 0.5,-1,-0.3 0.9 80,80,255 35
+s 0,10,8 0,-1,-0.8 0.7 80,255,80 40
+
+# Multi-point lights (bonus)
+l 3,2,5 0.3 255,200,150
+l -3,2,5 0.3 150,200,255
+
+# Objects with specular
+sp 2,0,0 1.5 255,100,100
+sp -2,0,0 1.5 100,100,255
+co 0,0,-2 0,1,0 25 4 150,255,150
+cy 0,-3,0 0,1,0 0.5 2 200,200,100
+
+# Checkerboard plane
+pl# 0,-4,0 0,1,0 120,120,120

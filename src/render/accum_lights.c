@@ -32,6 +32,20 @@ static float	make_dir_and_dist(t_vec3 *out_dir, t_vec3 from, t_vec3 to)
 	return (d);
 }
 
+static float	spotlight_factor(t_light *L, t_vec3 dir)
+{
+	float	cos_angle;
+	float	spot_factor;
+
+	if (L->type != LIGHT_SPOT)
+		return (1.0f);
+	cos_angle = -dot_product(dir, L->dir);
+	if (cos_angle < L->cutoff_cos)
+		return (0.0f);
+	spot_factor = (cos_angle - L->cutoff_cos) / (1.0f - L->cutoff_cos);
+	return (spot_factor * spot_factor);
+}
+
 static t_rgb	accum_light_once(t_scene *sc, t_light *L, t_ray hv, t_vec3 n)
 {
 	t_vec3	dir;
@@ -39,17 +53,19 @@ static t_rgb	accum_light_once(t_scene *sc, t_light *L, t_ray hv, t_vec3 n)
 	double	nd;
 	t_rgb	lc;
 	t_rgb	sum;
+	float	spot;
 
 	sum.red = 0.0f;
 	sum.green = 0.0f;
 	sum.blue = 0.0f;
 	dist = make_dir_and_dist(&dir, hv.origin, L->pos);
-	if (!in_shadow(sc, hv.origin, dir, dist))
+	spot = spotlight_factor(L, dir);
+	if (spot > EPS && !in_shadow(sc, hv.origin, dir, dist))
 	{
 		nd = dot_product(n, dir);
 		if (nd > 0.0)
 		{
-			lc = rgb_mul(L->color, L->br);
+			lc = rgb_mul(L->color, L->br * spot);
 			sum = rgb_add(sum, diffuse_rgb(lc, &hv.material, nd));
 			sum = rgb_add(sum, specular_rgb(n, dir, hv, lc));
 		}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shade.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:22:37 by yyudi             #+#    #+#             */
-/*   Updated: 2025/11/12 11:18:07 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/14 18:41:11 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ t_rgb	shade(t_scene *sc, t_ray hit_view, t_vec3 normal, t_material *mat)
 	hv.material = *mat;
 	n = normal;
 	apply_surface_effects(&hv.material, hv.origin, &n, &hv.material.color);
+	/* normal map application using hit type and local coordinates */
+	n = apply_normal_map(hv.type, hv.local_p, n, &hv.material);
 	amb = rgb_mul(sc->amb_color, sc->amb);
 	out = rgb_add(amb, accum_lights(sc, hv, n));
 	return (rgb_clamp01(out));

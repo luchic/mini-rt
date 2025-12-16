@@ -17,12 +17,12 @@ static int	parse_cone_metric(t_cone *cone, char **tok)
 int	parse_cone_bonus(char **tokens, t_scene *scene)
 {
 	t_cone	*cone;
-	t_rgb	color;
-	t_vec3	center;
-	t_vec3	axis;
+	t_rgb		color;
+	t_vec3		center;
+	t_vec3		axis;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5]
-		|| tokens[6])
+	/* allow optional 7th token (bm or nm:path) */
+	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5])
 		return (0);
 	cone = (t_cone *)emalloc(sizeof(t_cone));
 	if (!parse_v3(tokens[1], &center))
@@ -39,6 +39,13 @@ int	parse_cone_bonus(char **tokens, t_scene *scene)
 	cone->material.checker = 0;
 	cone->material.specular = 0.25f;
 	cone->material.sp_exp = 48;
-	cone->material.bump = 0;
+	cone->material.bump = (tokens[6] && ft_strcmp(tokens[6], "bm") == 0);
+	cone->material.has_normal_map = 0;
+	cone->material.normal_tex = NULL;
+	if (tokens[6] && ft_strncmp(tokens[6], "nm:", 3) == 0)
+	{
+		cone->material.normal_tex = mlx_load_png(tokens[6] + 3);
+		cone->material.has_normal_map = (cone->material.normal_tex != NULL);
+	}
 	return (scene_add_obj(scene, new_obj(OBJ_CONE, cone)), 1);
 }

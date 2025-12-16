@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_sphere.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:22:12 by yyudi             #+#    #+#             */
-/*   Updated: 2025/11/12 11:10:19 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/14 18:41:11 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,17 @@ int	hit_sphere(t_sphere *sp, t_ray ray_in, t_ray *hit_out)
 	material.specular = sp->material.specular;
 	material.sp_exp = sp->material.sp_exp;
 	material.bump = sp->material.bump;
+	material.has_normal_map = sp->material.has_normal_map;
+	material.normal_tex = sp->material.normal_tex;
 	hit_out->t = t_near;
-	hit_out->normal = vnorm(vsub(vadd(ray_in.origin, vmul(ray_in.direction,
-						t_near)), sp->center));
+	{
+		t_vec3 p;
+
+		p = vadd(ray_in.origin, vmul(ray_in.direction, t_near));
+		hit_out->normal = vnorm(vsub(p, sp->center));
+		hit_out->type = OBJ_SPHERE;
+		hit_out->local_p = vdivv(vsub(p, sp->center), sp->radius);
+	}
 	hit_out->material = material;
 	return (1);
 }

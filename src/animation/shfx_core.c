@@ -40,3 +40,11 @@ void	shfx_trigger(t_app *a)
 	if (s->center.y < s->radius + 0.1f)
 		s->center.y = s->radius + 0.1f;
 }
+
+void	lamp_toggle(t_app *app)
+{
+	if (!app)
+		return ;
+	app->lamp_enabled ^= 1;
+	app->needs_redraw = 1;
+}
