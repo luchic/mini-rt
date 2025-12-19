@@ -29,6 +29,18 @@ static int	set_light(t_scene *scene, t_light *light, int bonus_multi)
 	return (1);
 }
 
+static int	parse_light_color(char *token, t_rgb *color)
+{
+	if (token)
+	{
+		if (!parse_color(token, color))
+			return (0);
+	}
+	else
+		set_rgb(color, 1.0f);
+	return (1);
+}
+
 int	parse_light(char **tokens, t_scene *scene, int bonus_multi)
 {
 	t_vec3	pos;
@@ -42,13 +54,8 @@ int	parse_light(char **tokens, t_scene *scene, int bonus_multi)
 		return (0);
 	if (!parse_float(tokens[2], &brightness, 0.0f, 1.0f))
 		return (0);
-	if (tokens[3])
-	{
-		if (!parse_color(tokens[3], &color))
-			return (0);
-	}
-	else
-		set_rgb(&color, 1.0f);
+	if (!parse_light_color(tokens[3], &color))
+		return (0);
 	light = (t_light *)emalloc(sizeof(t_light));
 	light->type = LIGHT_POINT;
 	light->pos = pos;
