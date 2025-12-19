@@ -17,5 +17,6 @@ int	main(int argc, char **argv)
 	image_destroy(&app);
 	if (app.mlx)
 		mlx_terminate(app.mlx);
+	ft_clean();
 	return (0);
 }
