@@ -14,14 +14,12 @@ static uint32_t	pack_rgba(t_rgb color)
 	unsigned char	r;
 	unsigned char	g;
 	unsigned char	b;
-	unsigned char	a;
 
 	r = u8_clamp(color.red);
 	g = u8_clamp(color.green);
 	b = u8_clamp(color.blue);
-	a = 255;
-	return (((uint32_t)r << 24) | ((uint32_t)g << 16)
-		| ((uint32_t)b << 8) | (uint32_t)a);
+	return ((0xFFu << 24) | (uint32_t)b << 16
+		| ((uint32_t)g << 8) | ((uint32_t)r));
 }
 
 void	image_create(t_app *app, int w, int h)
