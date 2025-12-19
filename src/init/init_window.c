@@ -22,7 +22,7 @@ static void	init_window(t_app *app)
 {
 	app->width = WIN_W;
 	app->height = WIN_H;
-	app->mlx = mlx_init(app->width, app->height, "miniRT", false);
+	app->mlx = mlx_init(app->width, app->height, "miniRT", true);
 	if (!app->mlx)
 		ft_exit("mlx_init failed", 1);
 	image_create(app, app->width, app->height);

@@ -76,25 +76,34 @@ static void	on_resize(int32_t width, int32_t height, void *param)
 	t_app	*app;
 
 	app = (t_app *)param;
-	if (!app || !app->mlx || width <= 0 || height <= 0)
+	ft_printf("RESIZE: %d x %d\n", width, height);
+	if (!app || !app->mlx || width < 100 || height < 100)
 		return ;
 	if (app->img.img)
+	{
 		mlx_delete_image(app->mlx, app->img.img);
-	app->width = width;
-	app->height = height;
+		app->img.img = NULL;
+	}
 	app->img.img = mlx_new_image(app->mlx, width, height);
 	if (!app->img.img)
+	{
+		ft_printf("ERROR: mlx_new_image failed\n");
 		return ;
-	app->img.width = width;
-	app->img.height = height;
+	}
 	if (mlx_image_to_window(app->mlx, app->img.img, 0, 0) < 0)
 	{
+		ft_printf("ERROR: mlx_image_to_window failed\n");
 		mlx_delete_image(app->mlx, app->img.img);
 		app->img.img = NULL;
 		return ;
 	}
+	app->width = width;
+	app->height = height;
+	app->img.width = width;
+	app->img.height = height;
 	set_render_context(app);
 	app->needs_redraw = 1;
+	ft_printf("Resize OK\n");
 }
 
 void	setup_hooks(t_app *app)
