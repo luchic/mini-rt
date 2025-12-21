@@ -39,6 +39,7 @@ static int	parse_spotlight_fields(char **tokens, t_light *light)
 	light->br = brightness;
 	light->color = color;
 	light->cutoff_cos = cosf(cutoff_deg * PI_F / 180.0f);
+	return (1);
 }
 
 int	parse_spotlight(char **tokens, t_scene *scene)
