@@ -6,7 +6,7 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 00:00:00 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/11 15:52:59 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/19 14:56:59 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	mouse_look_callback(double xpos, double ypos, void *param)
 	double		dy;
 
 	app = (t_app *)param;
-	if (!app)
+	if (!app || !app->mouse_look_enabled)
 		return ;
 	cam = &app->scene.camera;
 	if (!cam)
@@ -63,6 +63,7 @@ void	mouse_look_callback(double xpos, double ypos, void *param)
 	app->mouse_last_y = ypos;
 	update_camera_angles(cam, dx, dy);
 	compute_direction(cam);
+	app->needs_redraw = 1;
 }
 
 

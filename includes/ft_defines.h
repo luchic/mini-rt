@@ -184,10 +184,11 @@ typedef struct s_app
 	int					needs_redraw;
 	int					lamp_enabled;
 	double				last_ts;
-	unsigned int		rng_seed;
-	double				mouse_last_x;
-	double				mouse_last_y;
-	int					mouse_first;
+	unsigned int	rng_seed;
+	double			mouse_last_x;
+	double			mouse_last_y;
+	int				mouse_first;
+	int				mouse_look_enabled;
 }						t_app;
 
 typedef struct s_physics
