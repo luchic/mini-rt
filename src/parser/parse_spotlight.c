@@ -16,18 +16,14 @@ static int	set_spotlight(t_scene *scene, t_light *light)
 	return (1);
 }
 
-int	parse_spotlight(char **tokens, t_scene *scene)
+static int	parse_spotlight_fields(char **tokens, t_light *light)
 {
 	t_vec3	pos;
 	t_vec3	dir;
 	float	brightness;
 	t_rgb	color;
 	float	cutoff_deg;
-	t_light	*light;
 
-	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5]
-		|| tokens[6])
-		return (0);
 	if (!parse_v3(tokens[1], &pos))
 		return (0);
 	if (!parse_norm_v3(tokens[2], &dir))
@@ -38,13 +34,24 @@ int	parse_spotlight(char **tokens, t_scene *scene)
 		return (0);
 	if (!parse_float(tokens[5], &cutoff_deg, 1.0f, 90.0f))
 		return (0);
-	light = (t_light *)emalloc(sizeof(t_light));
-	light->type = LIGHT_SPOT;
 	light->pos = pos;
 	light->dir = dir;
 	light->br = brightness;
 	light->color = color;
 	light->cutoff_cos = cosf(cutoff_deg * PI_F / 180.0f);
+}
+
+int	parse_spotlight(char **tokens, t_scene *scene)
+{
+	t_light	*light;
+
+	if (!tokens[1] || !tokens[2] || !tokens[3] || !tokens[4] || !tokens[5]
+		|| tokens[6])
+		return (0);
+	light = (t_light *)emalloc(sizeof(t_light));
+	if (!parse_spotlight_fields(tokens, light))
+		return (ft_free(light), 0);
+	light->type = LIGHT_SPOT;
 	light->next = NULL;
 	return (set_spotlight(scene, light));
 }
