@@ -16,10 +16,6 @@ typedef struct s_water {
 	float	ripple_freq;
 	float	ripple_speed;
 	float	ripple_fade;
-	double	ripple_start;
-	int		ripple_active;
-	float	center_x;
-	float	center_y;
 }	t_water;
 
 typedef enum e_objtype

@@ -6,7 +6,7 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:17:24 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/12 12:49:12 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/22 15:43:27 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,13 @@ int	trace_ray(t_scene *sc, t_ray r, t_rgb *col_out)
 {
 	t_ray	hit_r;
 	t_vec3	hit_p;
-	t_ray	view_r;
+	t_vec3	view_dir;
 
 	if (!hit_all(sc, r, &hit_r))
 		return (0);
 	hit_p = vadd(r.origin, vmul(r.direction, hit_r.t));
-	view_r = ray(hit_p, vmul(r.direction, -1.0f));
-	*col_out = shade(sc, view_r, hit_r.normal, &hit_r.material);
+	hit_r.origin = hit_p;
+	view_dir = vmul(r.direction, -1.0f);
+	*col_out = shade(sc, hit_r, view_dir);
 	return (1);
 }

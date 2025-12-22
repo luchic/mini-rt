@@ -1,0 +1,3 @@
+Loading normal map: textures/brick.png
+✓ Normal map loaded: 2000x1333
+✓ apply_normal_map called! has_normal_map=1, tex=0x12d9ba70

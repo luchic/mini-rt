@@ -108,7 +108,7 @@ int		hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec);
 void	render(t_app *a);
 int		trace_ray(t_scene *sc, t_ray r, t_rgb *out_color);
 int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 ldir, float ldist);
-t_rgb	shade(t_scene *sc, t_ray hit_view, t_vec3 normal, t_material *mat);
+t_rgb	shade(t_scene *sc, t_ray hit_r, t_vec3 view_dir);
 void	image_put_px(t_img *img, int x, int y, t_rgb color);
 
 void	set_render_context(t_app *app);
