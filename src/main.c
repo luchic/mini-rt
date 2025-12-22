@@ -1,4 +1,3 @@
-
 #include "ft_minirt.h"
 #include <string.h>
 

@@ -1,4 +1,3 @@
-
 #include "ft_minirt.h"
 
 t_vec3	vec3_project_on_axis(t_vec3 v, t_vec3 axis)
