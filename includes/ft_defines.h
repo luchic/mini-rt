@@ -47,7 +47,6 @@ typedef struct s_rgb
 	float				blue;
 }						t_rgb;
 
-
 typedef struct s_material
 {
 	t_rgb				color;
@@ -90,11 +89,10 @@ typedef struct s_camera
 	float				fov_deg;
 	t_vec3				right;
 	t_vec3				up;
-
 	float				yaw;
 	float				pitch;
 	float				move_speed;
-	float 				mouse_sens;
+	float				mouse_sens;
 
 }						t_camera;
 
@@ -180,11 +178,11 @@ typedef struct s_app
 	int					needs_redraw;
 	int					lamp_enabled;
 	double				last_ts;
-	unsigned int	rng_seed;
-	double			mouse_last_x;
-	double			mouse_last_y;
-	int				mouse_first;
-	int				mouse_look_enabled;
+	unsigned int		rng_seed;
+	double				mouse_last_x;
+	double				mouse_last_y;
+	int					mouse_first;
+	int					mouse_look_enabled;
 }						t_app;
 
 typedef struct s_physics
@@ -199,13 +197,13 @@ typedef struct s_physics
 typedef struct s_shfx
 {
 	int					enabled;
-	int					phase;       /* 0=falling, 1=shattered */
-	int					count;       /* shard aktif */
-	float				g;         /* gravitasi */
-	float				bounce;    /* koef. restitusi */
-	float				fric;      /* friksi lantai */
-	t_obj				*big_obj;  /* node objek besar */
-	t_plane				*ground; /* lantai (optional) */
+	int					phase;
+	int					count;
+	float				g;
+	float				bounce;
+	float				fric;
+	t_obj				*big_obj;
+	t_plane				*ground;
 	t_physics			shards[128];
 }						t_shfx;
 
@@ -219,5 +217,15 @@ typedef struct s_hit_context
 	float	ov;
 	float	k;
 }	t_hit_context;
+
+typedef struct s_light_once_ctx
+{
+	float	dist;
+	float	spot;
+	double	nd;
+	t_rgb	lc;
+	t_rgb	sum;
+	t_vec3	dir;
+}	t_light_once_ctx;
 
 #endif

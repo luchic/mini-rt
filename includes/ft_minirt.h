@@ -26,6 +26,7 @@ void	setup_hooks(t_app *app);
 void	init_camera_animation(t_app *app);
 void	anim_init(t_app *app);
 void	cam_anim_update(t_app *app, double now);
+void	on_resize(int32_t width, int32_t height, void *param);
 
 // ====================== math =======================
 t_vec3	vec3(float x, float y, float z);
@@ -94,11 +95,9 @@ t_obj	*find_first(t_scene *sc, t_objtype type);
 void	cam_anim_update(t_app *app, double now);
 t_plane	*find_ground(t_scene *sc);
 void	phys_step(t_physics *b, float dt, t_shfx *st);
-void	spawn_shards(t_app *app, t_scene *sc, t_shfx *st, t_sphere *big);
+void	spawn_shards(t_app *app, t_shfx *st, t_sphere *big);
 t_shfx	*fx(void);
 int		impact_happened(t_sphere *big, t_plane *pl);
-
-
 
 // ====================== render =======================
 int		hit_sphere(t_sphere *sp, t_ray ray_in, t_ray *hit_out);
@@ -113,7 +112,7 @@ void	image_put_px(t_img *img, int x, int y, t_rgb color);
 
 void	set_render_context(t_app *app);
 void	image_destroy(t_app *app);
-
+t_rgb	accum_light_once(t_scene *sc, t_light *L, t_ray hv, t_vec3 n);
 
 // ====================== rgb utils =========================
 t_rgb	rgb_add(t_rgb a, t_rgb b);
@@ -127,11 +126,12 @@ t_rgb	checker_bonus(t_vec3 p, t_rgb base);
 t_vec3	bump_bonus(t_vec3 n, t_vec3 p, t_material *m);
 t_rgb	specular_bonus(t_vec3 n, t_vec3 l, t_vec3 v, t_material *m);
 int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 to_l, float max_d);
-t_vec3	apply_normal_map(t_objtype type, t_vec3 local_p, t_vec3 n, t_material *m);
+t_vec3	apply_normal_map(t_objtype type,
+			t_vec3 local_p, t_vec3 n, t_material *m);
 
 t_vec3	vproj_on_n(t_vec3 v, t_vec3 n);
 float	plane_signed_dist(t_vec3 p, t_plane *pl);
 
-void mouse_look_callback(double xpos, double ypos, void *param);
+void	mouse_look_callback(double xpos, double ypos, void *param);
 
 #endif
