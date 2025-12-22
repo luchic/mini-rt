@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cylinder.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:20:20 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/22 15:43:27 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/22 17:48:49 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int	hit_cylinder(t_cylinder *cy, t_ray ray, float tmax, t_ray *rec)
 	rec->normal = cy_normal(cy, context.axis, ray, rec->t);
 	rec->material = cy->material;
 	rec->type = OBJ_CYLINDER;
-	rec->local_p = vsub(vadd(ray.origin, vmul(ray.direction, rec->t)), cy->center);
+	rec->local_p = vsub(
+			vadd(ray.origin, vmul(ray.direction, rec->t)), cy->center);
 	return (1);
 }

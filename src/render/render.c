@@ -47,7 +47,6 @@ static t_ray	make_primary_ray(t_app *app, float x, float y)
 	return (primary_ray(&app->scene.camera, px, py));
 }
 
-
 static void	render_scanline(t_app *app, int y)
 {
 	int					x;
