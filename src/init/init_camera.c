@@ -30,7 +30,6 @@ void	init_camera_animation(t_app *app)
 	app->animation.speed = 0.6f;
 	app->animation.radius = 4.0f;
 	app->last_ts = mlx_get_time();
-
 	app->scene.camera.move_speed = 4.0f;
 	app->scene.camera.mouse_sens = 0.0025f;
 	app->scene.camera.yaw = atan2f(app->scene.camera.direction.z,

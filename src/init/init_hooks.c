@@ -9,7 +9,6 @@ static void	on_close(void *param)
 		mlx_close_window(app->mlx);
 }
 
-// cam_anim_on_key(key, app);
 static void	on_key(mlx_key_data_t key, void *param)
 {
 	t_app	*app;
@@ -63,47 +62,11 @@ static void	on_loop(void *param)
 	if (!app || !app->mlx)
 		return ;
 	now = mlx_get_time();
-
 	shfx_update(app, now);
 	cam_anim_update(app, now);
-	update_lamp_sun(app); 
+	update_lamp_sun(app);
 	if (app->needs_redraw)
 		render(app);
-}
-
-static void	on_resize(int32_t width, int32_t height, void *param)
-{
-	t_app	*app;
-
-	app = (t_app *)param;
-	ft_printf("RESIZE: %d x %d\n", width, height);
-	if (!app || !app->mlx || width < 100 || height < 100)
-		return ;
-	if (app->img.img)
-	{
-		mlx_delete_image(app->mlx, app->img.img);
-		app->img.img = NULL;
-	}
-	app->img.img = mlx_new_image(app->mlx, width, height);
-	if (!app->img.img)
-	{
-		ft_printf("ERROR: mlx_new_image failed\n");
-		return ;
-	}
-	if (mlx_image_to_window(app->mlx, app->img.img, 0, 0) < 0)
-	{
-		ft_printf("ERROR: mlx_image_to_window failed\n");
-		mlx_delete_image(app->mlx, app->img.img);
-		app->img.img = NULL;
-		return ;
-	}
-	app->width = width;
-	app->height = height;
-	app->img.width = width;
-	app->img.height = height;
-	set_render_context(app);
-	app->needs_redraw = 1;
-	ft_printf("Resize OK\n");
 }
 
 void	setup_hooks(t_app *app)
