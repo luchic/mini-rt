@@ -1,0 +1,46 @@
+# ====== SOLAR SYSTEM ======
+A 0.08 255,255,255
+
+# Camera agak tinggi, lihat ke depan (biar orbit kebaca)
+C 0,6,-28 0,-0.15,1 70
+
+# Cahaya utama (feel "sun light")
+L -10,18,-18 0.9 255,255,255
+
+# Space backdrop (dinding belakang gelap)
+pl 0,0,60 0,0,-1 5,5,12
+
+# Ground gelap (buat depth + shadow lebih terlihat)
+pl 0,-8,0 0,1,0 2,2,6
+
+# ====== SUN ======
+sp 0,0,18 8 255,190,40
+
+# ====== ORBIT RINGS (trik visual pakai cylinder tipis) ======
+cy 0,0,18 0,1,0 18 0.15 18,18,28
+cy 0,0,18 0,1,0 26 0.15 18,18,28
+cy 0,0,18 0,1,0 36 0.15 18,18,28
+
+# ====== PLANETS ======
+sp -9,1,10 1.4 140,140,150
+sp 12,-1,14 2.0 210,170,90
+sp -15,0,22 2.2 60,130,255
+sp 18,2,28 1.6 220,90,60
+
+# ====== GAS GIANTS ======
+sp -24,-1,34 4.2 210,160,110
+sp 28,1,40 3.6 200,190,150
+
+# "Saturn ring" palsu (cylinder tipis ngelilingin planet)
+cy 28,1,40 0,1,0 9.0 0.18 180,170,140
+
+# ====== ICE GIANTS ======
+sp -34,2,46 3.0 120,200,255
+sp 38,0,54 3.0 60,90,220
+
+# ====== STARS (sphere kecil-kecil di belakang) ======
+sp -25,12,58 0.5 255,255,255
+sp 20,15,57 0.4 200,220,255
+sp 5,18,59 0.3 255,255,255
+sp 30,10,58 0.4 255,255,255
+sp -35,16,59 0.3 220,240,255
