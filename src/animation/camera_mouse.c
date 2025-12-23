@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera_mouse.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/06 00:00:00 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/19 14:56:59 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/22 17:24:57 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,3 @@ void	mouse_look_callback(double xpos, double ypos, void *param)
 	compute_direction(cam);
 	app->needs_redraw = 1;
 }
-
-

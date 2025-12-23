@@ -6,7 +6,7 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:22:37 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/22 16:00:03 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/23 14:41:52 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,10 @@ t_rgb	shade(t_scene *sc, t_ray hit_r, t_vec3 view_dir)
 	t_ray	hv;
 	t_vec3	n;
 
-	/* create view ray with complete hit information */
 	hv = hit_r;
 	hv.direction = view_dir;
 	n = hit_r.normal;
 	apply_surface_effects(&hv.material, hv.origin, &n, &hv.material.color);
-	/* normal map application using hit type and local coordinates */
 	n = apply_normal_map(hv.type, hv.local_p, n, &hv.material);
 	amb = rgb_mul(sc->amb_color, sc->amb);
 	out = rgb_add(amb, accum_lights(sc, hv, n));

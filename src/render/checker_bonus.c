@@ -6,7 +6,7 @@
 /*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:13:19 by yyudi             #+#    #+#             */
-/*   Updated: 2025/11/12 11:19:07 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/22 18:38:50 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ t_rgb	checker_bonus(t_vec3 surface_pos, t_rgb base_color)
 	int		is_light_tile;
 	t_rgb	light_tile;
 	t_rgb	dark_tile;
-	t_rgb	tile_col;
 
 	tile_v = (int)floorf(surface_pos.z);
 	tile_u = (int)floorf(surface_pos.x);
@@ -75,8 +74,7 @@ t_rgb	checker_bonus(t_vec3 surface_pos, t_rgb base_color)
 	dark_tile.blue = base_color.blue * 0.3f;
 	dark_tile = tile_variation(dark_tile, tile_u, tile_v);
 	if (is_light_tile)
-		tile_col = light_tile;
+		return (grout_color(surface_pos, light_tile));
 	else
-		tile_col = dark_tile;
-	return (grout_color(surface_pos, tile_col));
+		return (grout_color(surface_pos, dark_tile));
 }

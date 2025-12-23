@@ -10,7 +10,7 @@ static void	shfx_phase0(t_app *a, t_shfx *st, double dt)
 	big->center.y = big->center.y - st->g * (float)dt;
 	if (impact_happened(big, st->ground))
 	{
-		spawn_shards(a, &a->scene, st, big);
+		spawn_shards(a, st, big);
 		big->radius = 0.0f;
 		st->phase = 1;
 	}

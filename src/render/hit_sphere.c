@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_sphere.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:22:12 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/22 15:43:27 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/22 17:46:31 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	hit_sphere(t_sphere *sp, t_ray ray_in, t_ray *hit_out)
 {
 	float		t_near;
 	t_material	material;
+	t_vec3		p;
 
 	if (!get_near_hit(sp, ray_in, &t_near))
 		return (0);
@@ -47,8 +48,6 @@ int	hit_sphere(t_sphere *sp, t_ray ray_in, t_ray *hit_out)
 	material.normal_tex = sp->material.normal_tex;
 	hit_out->t = t_near;
 	{
-		t_vec3 p;
-
 		p = vadd(ray_in.origin, vmul(ray_in.direction, t_near));
 		hit_out->normal = vnorm(vsub(p, sp->center));
 		hit_out->type = OBJ_SPHERE;
