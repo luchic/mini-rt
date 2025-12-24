@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_minirt.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/24 14:03:31 by nluchini          #+#    #+#             */
+/*   Updated: 2025/12/24 14:03:32 by nluchini         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_MINIRT_H
 # define FT_MINIRT_H
 
@@ -113,6 +125,11 @@ void	image_put_px(t_img *img, int x, int y, t_rgb color);
 void	set_render_context(t_app *app);
 void	image_destroy(t_app *app);
 t_rgb	accum_light_once(t_scene *sc, t_light *L, t_ray hv, t_vec3 n);
+
+int		cy_solve(t_vec3 rdp, t_vec3 ocp, float radius, double x[2]);
+int		cy_clip(t_cylinder *cy, t_vec3 axis, t_ray r, float t);
+t_vec3	cy_normal(t_cylinder *cy, t_vec3 axis, t_ray r, float t);
+int		hit_cap_setup(t_hit_context *ctx, t_ray ray, float *t, float *denom);
 
 // ====================== rgb utils =========================
 t_rgb	rgb_add(t_rgb a, t_rgb b);

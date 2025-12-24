@@ -1,26 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_camera.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/24 13:07:15 by nluchini          #+#    #+#             */
+/*   Updated: 2025/12/24 13:07:19 by nluchini         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_minirt.h"
-
-// static t_vec3	choose_up(t_vec3 dir)
-// {
-// 	t_vec3	up;
-
-// 	up = vec3(0, 1, 0);
-// 	if (fabsf(dir.y) > 0.99f)
-// 		up = vec3(0, 0, 1);
-// 	return (up);
-// }
-
-// g_mode = LIGHT_NORMAL;
-// void	init_camera_animation(t_app *app)
-// {
-// 	if (!app)
-// 		return ;
-// 	app->animation.enabled = 1;
-// 	app->animation.speed = 0.6f;
-// 	app->animation.radius = 4.0f;
-// 	app->last_ts = mlx_get_time();
-// 	//anim_init(app);
-// }
 
 void	init_camera_animation(t_app *app)
 {

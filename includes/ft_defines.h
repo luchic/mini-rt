@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_defines.h                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/24 14:03:27 by nluchini          #+#    #+#             */
+/*   Updated: 2025/12/24 14:03:28 by nluchini         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef FT_DEFINES_H
 # define FT_DEFINES_H
 
@@ -209,13 +221,16 @@ typedef struct s_shfx
 
 typedef struct s_hit_context
 {
-	t_vec3	axis;
-	t_vec3	oc;
-	t_vec3	rdp;
-	t_vec3	ocp;
-	float	dv;
-	float	ov;
-	float	k;
+	t_vec3		axis;
+	t_vec3		oc;
+	t_vec3		rdp;
+	t_vec3		ocp;
+	t_vec3		cap_center;
+	float		dv;
+	float		ov;
+	float		k;
+	float		tmax;
+	t_cylinder	*cylinder;
 }	t_hit_context;
 
 typedef struct s_light_once_ctx
