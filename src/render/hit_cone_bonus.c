@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cone_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:19:46 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/24 14:01:02 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/24 14:37:12 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_minirt.h"
 
-// Perpendicular component (rejection from the axis)
-static int	cone_solve(t_hit_context context, double x[2])
+int	cone_solve(t_hit_context context, double x[2])
 {
 	float	a;
 	float	b;
@@ -28,41 +27,37 @@ static int	cone_solve(t_hit_context context, double x[2])
 	return (solve_quadratic(a, b, c, x));
 }
 
-/* Quadratic for an infinite (double) cone, k = tan(angle) */
-static int	cone_clip_height(t_cone *co, t_vec3 axis, t_vec3 p)
+int	cone_clip_height(t_cone *co, t_vec3 axis, t_vec3 hit_point)
 {
-	float	pos;
+	float	axis_pos;
 
-	pos = dot_product(vsub(p, co->center), axis);
-	if (pos < -co->height * 0.5f)
+	axis_pos = dot_product(vsub(hit_point, co->center), axis);
+	if (axis_pos < -co->height * 0.5f)
 		return (0);
-	if (pos > co->height * 0.5f)
+	if (axis_pos > co->height * 0.5f)
 		return (0);
 	return (1);
 }
 
-/* Symmetric height clipping: |position along the axis| <= height/2 */
-static t_vec3	cone_normal(t_cone *co, t_vec3 axis, t_vec3 p, float k)
+t_vec3	cone_normal(t_cone *co, t_vec3 axis, t_vec3 hit_point, float k)
 {
-	t_vec3	from_c;
+	t_vec3	from_center;
 	t_vec3	radial;
-	float	lenr;
-	float	s;
+	float	radial_len;
+	float	normal_scale;
 
-	from_c = vsub(p, co->center);
-	radial = vec3_reject_from_axis(from_c, axis);
-	lenr = dot_product(radial, vnorm(radial));
-	s = sqrtf(1.0f + k * k);
-	return (vnorm(vsub(radial, vmul(axis, (lenr * k) / s))));
+	from_center = vsub(hit_point, co->center);
+	radial = vec3_reject_from_axis(from_center, axis);
+	radial_len = dot_product(radial, vnorm(radial));
+	normal_scale = sqrtf(1.0f + k * k);
+	return (vnorm(vsub(radial, vmul(axis, (radial_len * k) / normal_scale))));
 }
 
-/* Symmetric height clipping: |position along the axis| <= height/2 */
+
 int	hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec)
 {
-	double				x[2];
-	float				t;
-	t_vec3				p;
-	t_hit_context		context;
+	t_hit_context	context;
+	int				hit_any;
 
 	context.axis = vnorm(co->axis);
 	context.k = tanf(co->angle);
@@ -71,17 +66,9 @@ int	hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec)
 	context.ov = dot_product(context.oc, context.axis);
 	context.rdp = vec3_reject_from_axis(ray.direction, context.axis);
 	context.ocp = vec3_reject_from_axis(context.oc, context.axis);
-	if (!cone_solve(context, x))
-		return (0);
-	t = x[0];
-	if (t < EPS)
-		t = x[1];
-	if (t < EPS || t > tmax)
-		return (0);
-	p = vadd(ray.origin, vmul(ray.direction, t));
-	if (!cone_clip_height(co, context.axis, p))
-		return (0);
-	return (rec->origin = p, rec->t = t, rec->type = OBJ_CONE,
-		rec->normal = cone_normal(co, context.axis, p, context.k),
-		rec->local_p = vsub(p, co->center), rec->material = co->material, 1);
+	context.tmax = tmax;
+	hit_any = hit_cone_side(co, &context, ray, rec);
+	if (check_cone_caps(co, &context, ray, rec))
+		hit_any = 1;
+	return (hit_any);
 }

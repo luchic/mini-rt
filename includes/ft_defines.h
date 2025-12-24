@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_defines.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 14:03:27 by nluchini          #+#    #+#             */
-/*   Updated: 2025/12/24 14:03:28 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/24 14:28:52 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,6 @@
 # define TMAX 1e9
 # define PI_F 3.14159265358979323846f
 
-typedef struct s_water {
-	int		enabled;
-	float	shimmer_strength;
-	float	ripple_intensity;
-	float	ripple_freq;
-	float	ripple_speed;
-	float	ripple_fade;
-}	t_water;
 
 typedef enum e_objtype
 {
@@ -185,7 +177,6 @@ typedef struct s_app
 	t_img				img;
 	t_scene				scene;
 	t_animation			animation;
-	t_water				water;
 	t_render_context	render_ctx;
 	int					needs_redraw;
 	int					lamp_enabled;
@@ -242,5 +233,14 @@ typedef struct s_light_once_ctx
 	t_rgb	sum;
 	t_vec3	dir;
 }	t_light_once_ctx;
+
+typedef struct s_cap_ctx
+{
+	t_vec3	axis;
+	t_vec3	center;
+	float	radius;
+	float	*tmax;
+}t_cap_ctx;
+
 
 #endif
