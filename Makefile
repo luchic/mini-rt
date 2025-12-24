@@ -39,6 +39,7 @@ SRC_FILES += $(RENDER)accum_light_once.c \
 			$(RENDER)bump_bonus.c \
 			$(RENDER)camera.c \
 			$(RENDER)checker_bonus.c \
+			$(RENDER)hit_cone_utils.c \
 			$(RENDER)hit_cone_bonus.c \
 			$(RENDER)hit_cylinder_utils.c \
 			$(RENDER)hit_cylinder.c \
