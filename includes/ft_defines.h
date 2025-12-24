@@ -6,7 +6,7 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 14:03:27 by nluchini          #+#    #+#             */
-/*   Updated: 2025/12/24 14:28:52 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/24 14:46:28 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # define EPS 1e-4
 # define TMAX 1e9
 # define PI_F 3.14159265358979323846f
-
 
 typedef enum e_objtype
 {
@@ -241,6 +240,5 @@ typedef struct s_cap_ctx
 	float	radius;
 	float	*tmax;
 }t_cap_ctx;
-
 
 #endif

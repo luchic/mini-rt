@@ -6,7 +6,7 @@
 /*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:19:46 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/24 14:37:12 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/24 14:46:48 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ t_vec3	cone_normal(t_cone *co, t_vec3 axis, t_vec3 hit_point, float k)
 	normal_scale = sqrtf(1.0f + k * k);
 	return (vnorm(vsub(radial, vmul(axis, (radial_len * k) / normal_scale))));
 }
-
 
 int	hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec)
 {
