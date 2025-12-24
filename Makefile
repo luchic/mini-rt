@@ -34,22 +34,86 @@ INIT = $(SRC)init/
 SRC_FILES = $(SRC)main.c
 
 #Render
-SRC_FILES += $(wildcard $(RENDER)*.c)
+SRC_FILES += $(RENDER)accum_light_once.c \
+			$(RENDER)accum_lights.c \
+			$(RENDER)bump_bonus.c \
+			$(RENDER)camera.c \
+			$(RENDER)checker_bonus.c \
+			$(RENDER)hit_cone_bonus.c \
+			$(RENDER)hit_cylinder_utils.c \
+			$(RENDER)hit_cylinder.c \
+			$(RENDER)hit_plane.c \
+			$(RENDER)hit_sphere.c \
+			$(RENDER)image.c \
+			$(RENDER)render_context.c \
+			$(RENDER)render.c \
+			$(RENDER)rgb.c \
+			$(RENDER)shade.c \
+			$(RENDER)shadow.c \
+			$(RENDER)specular_bonus.c \
+			$(RENDER)texture.c \
+			$(RENDER)trace.c
+
+# $(wildcard $(RENDER)*.c)
 
 #Parse
-SRC_FILES += $(wildcard $(PARSER)*.c)
+SRC_FILES += $(PARSER)create_new_obj.c \
+			$(PARSER)parse_ambient_light.c \
+			$(PARSER)parse_camera.c \
+			$(PARSER)parse_color.c \
+			$(PARSER)parse_cone.c \
+			$(PARSER)parse_cylinder.c \
+			$(PARSER)parse_file_line.c \
+			$(PARSER)parse_file.c \
+			$(PARSER)parse_light.c \
+			$(PARSER)parse_plane.c \
+			$(PARSER)parse_sphere.c \
+			$(PARSER)parse_spotlight.c \
+			$(PARSER)parse_utils.c \
+			$(PARSER)parse_vectors.c
+
+# $(wildcard $(PARSER)*.c)
 
 #Math
-SRC_FILES += $(wildcard $(MATH)*.c)
+SRC_FILES += $(MATH)polynomial.c \
+			$(MATH)projection.c \
+			$(MATH)vec_ops.c \
+			$(MATH)vec_ops1.c \
+			$(MATH)vec.c
+
+# $(wildcard $(MATH)*.c)
 
 #Utils
-SRC_FILES += $(wildcard $(UTILS)*.c)
+SRC_FILES += $(UTILS)atof.c \
+			$(UTILS)atoi.c \
+			$(UTILS)emalloc.c \
+			$(UTILS)error_handle.c \
+			$(UTILS)ft_atoi_checker.c \
+			$(UTILS)ft_free.c
+
+# $(wildcard $(UTILS)*.c)
 
 #Animation
-SRC_FILES += $(wildcard $(ANIMATION)*.c)
+SRC_FILES += $(ANIMATION)animation.c \
+			$(ANIMATION)camera_mouse.c \
+			$(ANIMATION)lamp_move.c \
+			$(ANIMATION)rand.c \
+			$(ANIMATION)shfx_core.c \
+			$(ANIMATION)shfx_find.c \
+			$(ANIMATION)shfx_math.c \
+			$(ANIMATION)shfx_physics.c \
+			$(ANIMATION)shfx_spwan.c \
+			$(ANIMATION)shfx_update.c
+			
+# $(wildcard $(ANIMATION)*.c)
 
 #MLX Windowing
-SRC_FILES += $(wildcard $(INIT)*.c)
+SRC_FILES += $(INIT)init_camera.c \
+			$(INIT)init_hooks.c \
+			$(INIT)init_window.c \
+			$(INIT)resize_hook.c \
+
+# $(wildcard $(INIT)*.c)
 
 OBJS = $(SRC_FILES:.c=.o)
 
@@ -110,6 +174,7 @@ clean:
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_PATH) fclean
+	rm -fr $(MLX42_DIR)
 	rm -f $(NAME)
 
 re: fclean all
