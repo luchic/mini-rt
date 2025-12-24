@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_plane.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:20:52 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/22 18:34:16 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/24 12:59:52 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	hit_plane(t_plane *pl, t_ray ray_in, float tmax, t_ray *ray_hit)
 	material.has_normal_map = pl->material.has_normal_map;
 	material.normal_tex = pl->material.normal_tex;
 	ray_hit->t = t_candidate;
+	ray_hit->origin = vadd(ray_in.origin, vmul(ray_in.direction, t_candidate));
 	ray_hit->normal = pl->normal;
 	ray_hit->type = OBJ_PLANE;
 	set_plane_local_p(ray_in, t_candidate, pl, ray_hit);

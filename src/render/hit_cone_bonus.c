@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cone_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:19:46 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/22 17:47:34 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/24 12:59:52 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ int	hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec)
 	p = vadd(ray.origin, vmul(ray.direction, t));
 	if (!cone_clip_height(co, context.axis, p))
 		return (0);
+	rec->origin = p;
 	rec->normal = cone_normal(co, context.axis, p, context.k);
 	rec->local_p = vsub(p, co->center);
 	return (rec->type = OBJ_CONE, rec->material = co->material, rec->t = t, 1);
