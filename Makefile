@@ -140,9 +140,7 @@ $(NAME): $(MLX_LIB) $(LIBFT) $(OBJS)
 debug: CFLAGS += $(DEBUG)
 debug: $(NAME)
 
-bonus: CFLAGS += -DBONUS=1
-bonus: $(OBJS) $(BONUS_OBJS) $(MLX_LIB) $(LIBFT)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(BONUS_OBJS) $(LIBS)
+bonus: $(NAME)
 
 $(LIBFT):
 	$(MAKE) -C $(LIBFT_PATH)
@@ -171,7 +169,7 @@ $(MLX_LIB): $(MLX42_DIR)/include/MLX42/MLX42.h
 
 clean:
 	$(MAKE) -C $(LIBFT_PATH) clean
-	rm -f $(OBJS) $(BONUS_OBJS)
+	rm -f $(OBJS)
 
 fclean: clean
 	$(MAKE) -C $(LIBFT_PATH) fclean
