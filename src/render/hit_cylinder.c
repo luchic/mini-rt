@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hit_cylinder.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
+/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/17 12:20:20 by yyudi             #+#    #+#             */
-/*   Updated: 2025/12/24 13:02:58 by yyudi            ###   ########.fr       */
+/*   Updated: 2025/12/24 13:51:00 by nluchini         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,19 +51,17 @@ static t_vec3	cy_normal(t_cylinder *cy, t_vec3 axis, t_ray r, float t)
 	return (vnorm(perp));
 }
 
-/* hit cap (tutup/disk) pada posisi tertentu sepanjang axis */
-static int	hit_cap_setup(t_ray ray, t_vec3 axis, t_vec3 cap_center,
+static int	hit_cap_setup(t_hit_context *ctx, t_ray ray,
 	float *t, float *denom)
 {
-	*denom = dot_product(axis, ray.direction);
+	*denom = dot_product(ctx->axis, ray.direction);
 	if (fabsf(*denom) < EPS)
 		return (0);
-	*t = dot_product(vsub(cap_center, ray.origin), axis) / *denom;
+	*t = dot_product(vsub(ctx->cap_center, ray.origin), ctx->axis) / *denom;
 	return (1);
 }
 
-static int	hit_cap(t_cylinder *cy, t_vec3 axis, t_vec3 cap_center,
-	t_ray ray, float tmax, t_ray *rec)
+static int	hit_cap(t_hit_context *ctx, t_ray ray, t_ray *rec)
 {
 	float	denom;
 	float	t;
@@ -71,68 +69,68 @@ static int	hit_cap(t_cylinder *cy, t_vec3 axis, t_vec3 cap_center,
 	t_vec3	to_p;
 	float	dist_sq;
 
-	if (!hit_cap_setup(ray, axis, cap_center, &t, &denom))
+	if (!hit_cap_setup(ctx, ray, &t, &denom))
 		return (0);
-	if (t < EPS || t > tmax)
+	if (t < EPS || t > ctx->tmax)
 		return (0);
 	p = vadd(ray.origin, vmul(ray.direction, t));
-	to_p = vsub(p, cap_center);
+	to_p = vsub(p, ctx->cap_center);
 	dist_sq = dot_product(to_p, to_p);
-	if (dist_sq > cy->radius * cy->radius)
+	if (dist_sq > ctx->cylinder->radius * ctx->cylinder->radius)
 		return (0);
 	rec->t = t;
 	rec->origin = p;
 	if (denom > 0)
-		rec->normal = vmul(axis, -1.0f);
+		rec->normal = vmul(ctx->axis, -1.0f);
 	else
-		rec->normal = axis;
-	rec->material = cy->material;
+		rec->normal = ctx->axis;
+	rec->material = ctx->cylinder->material;
 	rec->type = OBJ_CYLINDER;
-	rec->local_p = vsub(p, cy->center);
+	rec->local_p = vsub(p, ctx->cylinder->center);
 	return (1);
 }
 
-static int	check_cylinder_side(t_cylinder *cy, t_hit_context ctx,
-	t_ray ray, double *x, t_ray *rec, float *tmax)
+static int	check_cylinder_side(t_hit_context *ctx,
+	t_ray ray, double *x, t_ray *rec)
 {
-	if (!cy_solve(ctx.rdp, ctx.ocp, cy->radius, x))
+	if (!cy_solve(ctx->rdp, ctx->ocp, ctx->cylinder->radius, x))
 		return (0);
 	if (x[0] < EPS)
 		x[0] = x[1];
-	if (x[0] < EPS || x[0] > *tmax)
+	if (x[0] < EPS || x[0] > ctx->tmax)
 		return (0);
-	if (!cy_clip(cy, ctx.axis, ray, x[0]))
+	if (!cy_clip(ctx->cylinder, ctx->axis, ray, x[0]))
 		return (0);
 	rec->t = x[0];
 	rec->origin = vadd(ray.origin, vmul(ray.direction, rec->t));
-	rec->normal = cy_normal(cy, ctx.axis, ray, rec->t);
-	rec->material = cy->material;
+	rec->normal = cy_normal(ctx->cylinder, ctx->axis, ray, rec->t);
+	rec->material = ctx->cylinder->material;
 	rec->type = OBJ_CYLINDER;
-	rec->local_p = vsub(rec->origin, cy->center);
-	*tmax = rec->t;
+	rec->local_p = vsub(rec->origin, ctx->cylinder->center);
+	ctx->tmax = rec->t;
 	return (1);
 }
 
-static void	check_cylinder_caps(t_cylinder *cy, t_hit_context ctx,
-	t_ray ray, t_ray *rec, float *tmax, int *hit_any)
+static void	check_cylinder_caps(t_hit_context *ctx,
+		t_ray ray, t_ray *rec, int *hit_any)
 {
 	t_ray	cap_rec;
 	int		hit_top;
 	int		hit_bot;
 
-	hit_top = hit_cap(cy, ctx.axis,
-			vadd(cy->center, vmul(ctx.axis, cy->height * 0.5f)),
-			ray, *tmax, &cap_rec);
-	if (hit_top && cap_rec.t < *tmax)
+	ctx->cap_center = vadd(ctx->cylinder->center,
+			vmul(ctx->axis, -ctx->cylinder->height * 0.5f));
+	hit_top = hit_cap(ctx, ray, &cap_rec);
+	if (hit_top && cap_rec.t < ctx->tmax)
 	{
 		*rec = cap_rec;
-		*tmax = rec->t;
+		ctx->tmax = rec->t;
 		*hit_any = 1;
 	}
-	hit_bot = hit_cap(cy, ctx.axis,
-			vadd(cy->center, vmul(ctx.axis, -cy->height * 0.5f)),
-			ray, *tmax, &cap_rec);
-	if (hit_bot && cap_rec.t < *tmax)
+	ctx->cap_center = vadd(ctx->cylinder->center,
+			vmul(ctx->axis, ctx->cylinder->height * 0.5f));
+	hit_bot = hit_cap(ctx, ray, &cap_rec);
+	if (hit_bot && cap_rec.t < ctx->tmax)
 	{
 		*rec = cap_rec;
 		*hit_any = 1;
@@ -145,11 +143,13 @@ int	hit_cylinder(t_cylinder *cy, t_ray ray, float tmax, t_ray *rec)
 	double			x[2];
 	int				hit_any;
 
-	context.axis = vnorm(cy->axis);
-	context.oc = vsub(ray.origin, cy->center);
+	context.cylinder = cy;
+	context.tmax = tmax;
+	context.axis = vnorm(context.cylinder->axis);
+	context.oc = vsub(ray.origin, context.cylinder->center);
 	context.rdp = vec3_reject_from_axis(ray.direction, context.axis);
 	context.ocp = vec3_reject_from_axis(context.oc, context.axis);
-	hit_any = check_cylinder_side(cy, context, ray, x, rec, &tmax);
-	check_cylinder_caps(cy, context, ray, rec, &tmax, &hit_any);
+	hit_any = check_cylinder_side(&context, ray, x, rec);
+	check_cylinder_caps(&context, ray, rec, &hit_any);
 	return (hit_any);
 }

@@ -209,13 +209,16 @@ typedef struct s_shfx
 
 typedef struct s_hit_context
 {
-	t_vec3	axis;
-	t_vec3	oc;
-	t_vec3	rdp;
-	t_vec3	ocp;
-	float	dv;
-	float	ov;
-	float	k;
+	t_vec3		axis;
+	t_vec3		oc;
+	t_vec3		rdp;
+	t_vec3		ocp;
+	t_vec3		cap_center;
+	float		dv;
+	float		ov;
+	float		k;
+	float		tmax;
+	t_cylinder	*cylinder;
 }	t_hit_context;
 
 typedef struct s_light_once_ctx
