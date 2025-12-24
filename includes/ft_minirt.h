@@ -114,6 +114,11 @@ void	set_render_context(t_app *app);
 void	image_destroy(t_app *app);
 t_rgb	accum_light_once(t_scene *sc, t_light *L, t_ray hv, t_vec3 n);
 
+int		cy_solve(t_vec3 rdp, t_vec3 ocp, float radius, double x[2]);
+int		cy_clip(t_cylinder *cy, t_vec3 axis, t_ray r, float t);
+t_vec3	cy_normal(t_cylinder *cy, t_vec3 axis, t_ray r, float t);
+int		hit_cap_setup(t_hit_context *ctx, t_ray ray, float *t, float *denom);
+
 // ====================== rgb utils =========================
 t_rgb	rgb_add(t_rgb a, t_rgb b);
 t_rgb	rgb_mul(t_rgb a, float k);
