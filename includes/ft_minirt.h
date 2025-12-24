@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_minirt.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nluchini <nluchini@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yyudi <yyudi@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/24 14:03:31 by nluchini          #+#    #+#             */
-/*   Updated: 2025/12/24 14:03:32 by nluchini         ###   ########.fr       */
+/*   Updated: 2025/12/24 14:37:28 by yyudi            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,14 @@ int		hit_sphere(t_sphere *sp, t_ray ray_in, t_ray *hit_out);
 int		hit_plane(t_plane *pl, t_ray ray_in, float tmax, t_ray *ray_hit);
 int		hit_cylinder(t_cylinder *cy, t_ray ray, float tmax, t_ray *rec);
 int		hit_cone(t_cone *co, t_ray ray, float tmax, t_ray *rec);
+int		hit_cone_side(t_cone *co, t_hit_context *ctx,
+			t_ray ray, t_ray *rec);
+int		check_cone_caps(t_cone *co, t_hit_context *ctx,
+			t_ray ray, t_ray *rec);
+int		cone_solve(t_hit_context context, double x[2]);
+int		cone_clip_height(t_cone *co, t_vec3 axis, t_vec3 hit_point);
+t_vec3	cone_normal(t_cone *co, t_vec3 axis, t_vec3 hit_point, float k);
+
 void	render(t_app *a);
 int		trace_ray(t_scene *sc, t_ray r, t_rgb *out_color);
 int		in_shadow(t_scene *sc, t_vec3 p, t_vec3 ldir, float ldist);
